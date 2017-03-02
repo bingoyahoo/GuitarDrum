@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout
-    android:id="@+id/activity_main"
+    android:id="@+id/activity_drum"
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -9,19 +9,21 @@
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
-    tools:context="sg.edu.nus.guitardrum.MainActivity"
+    tools:context="sg.edu.nus.guitardrum.DrumActivity"
     android:orientation="vertical">
+
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/guitar_title"
+        android:text="@string/drum_title"
         android:textAppearance="@style/TextAppearance.AppCompat.Display1"
-        android:textAlignment="center"
-        android:textStyle="normal|bold"/>
+        android:textStyle="normal|bold"
+        android:textAlignment="center"/>
+
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/play_guitar_instructions"
+        android:text="@string/play_drum_instructions"
         android:textAppearance="@style/TextAppearance.AppCompat.Medium"
         android:textAlignment="center"/>
 
@@ -120,4 +122,47 @@
             android:textAlignment="center"/>
 
     </LinearLayout>
+
+<!--<TextView-->
+    <!--android:text="Proximity"-->
+    <!--android:layout_width="wrap_content"-->
+    <!--android:layout_height="wrap_content"-->
+    <!--android:layout_marginTop="22dp"-->
+    <!--android:id="@+id/textView2"-->
+    <!--android:textAppearance="@style/TextAppearance.AppCompat.Display1"/>-->
+
+<!--<TextView-->
+    <!--android:text="X"-->
+    <!--android:layout_width="wrap_content"-->
+    <!--android:layout_height="wrap_content"-->
+    <!--android:layout_below="@+id/textView2"-->
+    <!--android:layout_centerHorizontal="true"-->
+    <!--android:layout_marginTop="47dp"-->
+    <!--android:id="@+id/xText" />-->
+
+<!--<Button-->
+    <!--android:text="@string/play_hihat"-->
+    <!--android:layout_width="wrap_content"-->
+    <!--android:layout_height="wrap_content"-->
+    <!--android:id="@+id/play_hihat"-->
+    <!--android:layout_marginTop="37dp" />-->
+
+<!--<Button-->
+    <!--android:text="@string/play_crash"-->
+    <!--android:layout_width="wrap_content"-->
+    <!--android:layout_height="wrap_content"-->
+    <!--android:id="@+id/play_crash"/>-->
+
+<!--<Button-->
+    <!--android:text="@string/play_kick"-->
+    <!--android:layout_width="wrap_content"-->
+    <!--android:layout_height="wrap_content"-->
+    <!--android:id="@+id/play_kick"/>-->
+
+<!--<Button-->
+    <!--android:text="@string/play_snare"-->
+    <!--android:layout_width="wrap_content"-->
+    <!--android:layout_height="wrap_content"-->
+    <!--android:id="@+id/play_snare"/>-->
+
 </LinearLayout>

@@ -1,3 +1,16 @@
 <resources>
     <string name="app_name">GuitarDrum</string>
+    <string name="play_guitar_instructions">1. Shake to strum\n2. Whip to hit</string>
+    <string name="play_drum_instructions">1. Shake for hihat, kick and snare\n2. Whip to crash</string>
+    <string name="FingerOne">Finger 1</string>
+    <string name="FingerTwo">Finger 2</string>
+    <string name="FingerThree">Finger 3</string>
+
+    <string name="play_kick">Kick Drum</string>
+    <string name="play_hihat">HiHat</string>
+    <string name="play_snare">Snare</string>
+    <string name="play_crash">Crash</string>
+    <string name="toggle_instruments">Toggle Instruments</string>
+    <string name="drum_title">DRUM</string>
+    <string name="guitar_title">GUITAR</string>
 </resources>

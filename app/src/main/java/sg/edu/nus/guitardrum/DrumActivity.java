@@ -1,7 +1,6 @@
 package sg.edu.nus.guitardrum;
 
 import android.content.Context;
-import android.content.Intent;
 import android.graphics.PointF;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
@@ -20,19 +19,20 @@ import android.widget.TextView;
 
 import java.io.IOException;
 
-public class MainActivity extends AppCompatActivity implements SensorEventListener {
-    TextView textViewFinger1id, textViewFinger1xcoor, textViewFinger1ycoor, textViewFinger2id, textViewFinger2xcoor, textViewFinger2ycoor, textViewFinger3id, textViewFinger3xcoor, textViewFinger3ycoor;
-    private SparseArray<PointF> mActivePointers;
+public class DrumActivity extends AppCompatActivity implements SensorEventListener {
+    private TextView xText, yText, zText;
+    private Sensor        mProximitySensor;
 
     private SensorManager mSensorManager;
     private Sensor mAccelerometer;
-    private MediaPlayer mPlayerCymbal; /* For Drum */
-    private MediaPlayer mPlayerGuitar, mPlayerGuitarHit,
-            mPlayerGuitarFirstStringE, mPlayerGuitarSecondStringB,
-            mPlayerGuitarThirdStringG, mPlayerGuitarFourthStringD,
-            mPlayerGuitarFifthStringA, mPlayerGuitarSixthStringE; /* For Guitar */
+    private MediaPlayer mPlayerDrumHihat,
+            mPlayerDrumCrash, mPlayerDrumKickDrum,
+            mPlayerDrumSnare; /* For Drum */
     private final static double SMASH_THRESHOLD = 28;
     private static float SHAKE_THRESHOLD = 1500;
+
+    TextView textViewFinger1id, textViewFinger1xcoor, textViewFinger1ycoor, textViewFinger2id, textViewFinger2xcoor, textViewFinger2ycoor, textViewFinger3id, textViewFinger3xcoor, textViewFinger3ycoor;
+    private SparseArray<PointF> mActivePointers;
 
     private float last_x;
     private float last_y;
@@ -42,20 +42,21 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_drum);
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 
-        // For playing guitar sounds when acceleration detected
+        // Create sensor manager for proximity
+        mSensorManager = (SensorManager)getSystemService(SENSOR_SERVICE);
+        mProximitySensor = mSensorManager.getDefaultSensor(Sensor.TYPE_PROXIMITY);
+//        xText = (TextView)findViewById(R.id.xText);
+
+        // For playing drum sounds when acceleration detected
         mSensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
         mAccelerometer = mSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
-        mPlayerGuitar = MediaPlayer.create(this, R.raw.beat);
-        mPlayerGuitarHit = MediaPlayer.create(this, R.raw.guitar_hit);
-        mPlayerGuitarFirstStringE = MediaPlayer.create(this, R.raw.guitar_first);
-        mPlayerGuitarSecondStringB = MediaPlayer.create(this, R.raw.guitar_second);
-        mPlayerGuitarThirdStringG = MediaPlayer.create(this, R.raw.guitar_third);
-        mPlayerGuitarFourthStringD = MediaPlayer.create(this, R.raw.guitar_fourth);
-        mPlayerGuitarFifthStringA = MediaPlayer.create(this, R.raw.guitar_fifth);
-        mPlayerGuitarSixthStringE = MediaPlayer.create(this, R.raw.guitar_sixth);
+        mPlayerDrumHihat = MediaPlayer.create(this, R.raw.drum_hihat);
+        mPlayerDrumCrash = MediaPlayer.create(this, R.raw.drum_crash);
+        mPlayerDrumKickDrum = MediaPlayer.create(this, R.raw.drum_kick);
+        mPlayerDrumSnare = MediaPlayer.create(this, R.raw.drum_snare);
 
         // For Multi-touch
         mActivePointers = new SparseArray<PointF>();
@@ -86,17 +87,18 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.toggle_instruments) {
-            Intent changeInstrumentIntent = new Intent(this, DrumActivity.class);
-            startActivity(changeInstrumentIntent);
+            finish();
             return true;
         }
 
         return super.onOptionsItemSelected(item);
     }
 
+
     @Override
     protected void onResume() {
         super.onResume();
+        mSensorManager.registerListener(this, mProximitySensor, SensorManager.SENSOR_DELAY_FASTEST);
         mSensorManager.registerListener(this, mAccelerometer, SensorManager.SENSOR_DELAY_FASTEST);
     }
 
@@ -106,10 +108,77 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         mSensorManager.unregisterListener(this);
     }
 
+    // Play this sound if smashing detected
+    private void playSmashSound(){
+        if(mPlayerDrumCrash.isPlaying()) {
+            mPlayerDrumCrash.stop();
+            try {
+                mPlayerDrumCrash.prepare();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            mPlayerDrumCrash.start();
+        } else {
+            mPlayerDrumCrash.start();
+        }
+    }
+
+    // Play this sound if strumming detected
+    private void playGuitarChordOrNote() {
+        int numFingers = mActivePointers.size();
+        if (numFingers == 0) {
+            if(mPlayerDrumHihat.isPlaying()) {
+                mPlayerDrumHihat.stop();
+                try {
+                    mPlayerDrumHihat.prepare();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                mPlayerDrumHihat.start();
+            } else {
+                mPlayerDrumHihat.start();
+            }
+        } else if (numFingers == 1){
+
+            if(mPlayerDrumSnare.isPlaying()){
+                mPlayerDrumSnare.stop();
+                try {
+                    mPlayerDrumSnare.prepare();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                mPlayerDrumSnare.start();
+            } else {
+                mPlayerDrumSnare.start();
+            }
+        } else {
+            if(mPlayerDrumKickDrum.isPlaying())
+            {
+                mPlayerDrumKickDrum.stop();
+                try {
+                    mPlayerDrumKickDrum.prepare();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                mPlayerDrumKickDrum.start();
+            }
+            else {
+                mPlayerDrumKickDrum.start();
+            }
+        }
+    }
+
     public void onSensorChanged(SensorEvent event) {
         int sensor = event.sensor.getType();
         float[] values = event.values;
-        if(sensor == Sensor.TYPE_ACCELEROMETER) {
+//        if (sensor == Sensor.TYPE_PROXIMITY){
+//            if (event.values[0] > 0) {
+//                xText.setText("Hand Away");
+//            } else {
+//                xText.setText("Hand Near");
+//            }
+//        } else
+            if(sensor == Sensor.TYPE_ACCELEROMETER) {
             long curTime = System.currentTimeMillis();
             if(lastUpdate == 0){
                 lastUpdate = curTime;
@@ -145,65 +214,12 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         }
     }
 
-    public void onAccuracyChanged(Sensor sensor, int accuracy) {
+
+    @Override
+    public void onAccuracyChanged(Sensor sensor, int i) {
+        // no use
     }
 
-    // Play this sound if smashing detected
-    private void playSmashSound(){
-        if(mPlayerGuitarHit.isPlaying()) {
-            mPlayerGuitarHit.stop();
-            try {
-                mPlayerGuitarHit.prepare();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
-        else {
-            mPlayerGuitarHit.start();
-        }
-    }
-
-    // Play this sound if strumming detected
-    private void playGuitarChordOrNote() {
-        int numFingers = mActivePointers.size();
-        if (numFingers == 0) {
-            if(mPlayerGuitarFirstStringE.isPlaying()) {
-                mPlayerGuitarFirstStringE.stop();
-                try {
-                    mPlayerGuitarFirstStringE.prepare();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
-            else {
-                mPlayerGuitarFirstStringE.start();
-            }
-        } else if (numFingers == 1){
-            if(mPlayerGuitarSecondStringB.isPlaying()) {
-                mPlayerGuitarSecondStringB.stop();
-                try {
-                    mPlayerGuitarSecondStringB.prepare();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
-            else {
-                mPlayerGuitarSecondStringB.start();
-            }
-        } else {
-            if(mPlayerGuitarThirdStringG.isPlaying()) {
-                mPlayerGuitarThirdStringG.stop();
-                try {
-                    mPlayerGuitarThirdStringG.prepare();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
-            else {
-                mPlayerGuitarThirdStringG.start();
-            }
-        }
-    }
 
     @Override
     public boolean onTouchEvent(MotionEvent event){
