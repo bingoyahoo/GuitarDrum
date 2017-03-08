@@ -91,6 +91,12 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
             return true;
         }
 
+        if (id == R.id.train_classifier) {
+            Intent startClassificationIntent = new Intent(this, ClassificationActivity.class);
+            startActivity(startClassificationIntent);
+            return true;
+        }
+
         return super.onOptionsItemSelected(item);
     }
 

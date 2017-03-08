@@ -9,4 +9,11 @@
         app:showAsAction="always"
         android:orderInCategory="0"/>
 
+    <item
+        android:id="@+id/train_classifier"
+        android:icon="@android:drawable/btn_plus"
+        android:title="@string/train_classifier"
+        app:showAsAction="always"
+        android:orderInCategory="1"/>
+
 </menu>
