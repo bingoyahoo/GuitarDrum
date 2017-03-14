@@ -34,10 +34,20 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
     private final static double SMASH_THRESHOLD = 28;
     private static float SHAKE_THRESHOLD = 1500;
 
+    //variables for checking sampling rate
+    private final static long sampling_interval = 10000000; //ns
+    private final static long sampling_interval_error_margin = 2000000;//20%
     private float last_x;
     private float last_y;
     private float last_z;
-    private long lastUpdate;
+    private long lastTimeStamp;
+    //Buffer variables
+    private boolean bufferisReady = false;
+    private float[][] buffer;
+    private float[][] nextBuffer;
+    private final static int bufferLen = 1024;
+    private final static int bufferOverlap = 512;
+    private int bufferIndex;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -68,6 +78,11 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         textViewFinger1ycoor = (TextView) findViewById(R.id.finger1_ycoor);
         textViewFinger2ycoor = (TextView) findViewById(R.id.finger2_ycoor);
         textViewFinger3ycoor = (TextView) findViewById(R.id.finger3_ycoor);
+
+        // For Buffers
+        buffer = new float[bufferLen][3];
+        nextBuffer = new float[bufferLen][3];
+        bufferIndex = 0;
     }
 
     @Override
@@ -106,43 +121,116 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         mSensorManager.unregisterListener(this);
     }
 
-    public void onSensorChanged(SensorEvent event) {
+    private void makeBuffer(SensorEvent event){
         int sensor = event.sensor.getType();
         float[] values = event.values;
+
         if(sensor == Sensor.TYPE_ACCELEROMETER) {
-            long curTime = System.currentTimeMillis();
-            if(lastUpdate == 0){
-                lastUpdate = curTime;
-                last_x = event.values[0];
-                last_y = event.values[1];
-                last_z = event.values[2];
+            if(lastTimeStamp == 0){
+                lastTimeStamp = event.timestamp;
             }
-            // Only allows one update every 100ms
-            else if ((curTime - lastUpdate) > 100) {
-                long diffTime = (curTime - lastUpdate);
-                lastUpdate = curTime;
-                float x = values[0];
-                float y = values[1];
-                float z = values[2];
-
-                // Delvin: Smash
-                if (values[2] > SMASH_THRESHOLD) {
-                    Log.i("sensor", "running");
-                    Log.e("Accelerometer Triggered", " " + x + " " + y + " " + z);
-                    playSmashSound();
-
-                } else { // Krystal: Shake
-                    float speed = (x + y + z - last_x - last_y - last_z) / diffTime * 10000;
-                    if (speed > SHAKE_THRESHOLD) {
-                        Log.d("sensor", "shake detected w/ speed: " + speed);
-                        playGuitarChordOrNote();
-                    }
+            else {
+                long timeInterval = event.timestamp - lastTimeStamp;
+                //Log.d("timestamp", "timediff " + timeInterval);
+                //Put values into buffer
+                if(timeInterval > sampling_interval + 2 * sampling_interval_error_margin){
+                    //Will this happen?
+                    Log.d("buffer", "timediff is twice error margin" + timeInterval);
                 }
-                last_x = x;
-                last_y = y;
-                last_z = z;
+                if(timeInterval > sampling_interval + sampling_interval_error_margin){
+                    //If timestamp > sampling rate
+                    //interpolate values
+                    long ratio = timeInterval / sampling_interval;
+                    buffer[bufferIndex][0] = last_x + (values[0] - last_x) * ratio;
+                    buffer[bufferIndex][1] = last_y + (values[1] - last_y) * ratio;
+                    buffer[bufferIndex][2] = last_z + (values[2] - last_z) * ratio;
+                    last_x = buffer[bufferIndex][0];
+                    last_y = buffer[bufferIndex][1];
+                    last_z = buffer[bufferIndex][2];
+                    lastTimeStamp = lastTimeStamp + sampling_interval;
+                }
+                else if (timeInterval < sampling_interval - sampling_interval_error_margin){
+                    //don't do anything
+                    //Not sure if we should do this, or extrapolate values?
+                }
+                else {
+                    buffer[bufferIndex][0] = values[0];
+                    buffer[bufferIndex][1] = values[1];
+                    buffer[bufferIndex][2] = values[2];
+                    last_x = values[0];
+                    last_y = values[1];
+                    last_z = values[2];
+                    lastTimeStamp = event.timestamp;
+                }
+                bufferIndex += 1;
+                //buffer is full
+                if(bufferIndex == bufferLen){
+                    bufferisReady = true;
+                    //copy values into new buffer
+                    for(int i = 0; i < bufferOverlap; i++){
+                        for(int j=0; j<3; j++){
+                            nextBuffer[i][j] = buffer[i + bufferOverlap][j];
+                        }
+                    }
+                    bufferIndex = bufferOverlap;
+                }
+
             }
         }
+    }
+
+    private void doSomeCalculations(float[][] buffer){
+        //dummy function
+    }
+
+    public void onSensorChanged(SensorEvent event) {
+        makeBuffer(event);
+        if(bufferisReady){
+            doSomeCalculations(buffer);
+            bufferisReady = false;
+            //copy nextBuffer into buffer
+            for(int i = 0; i < bufferOverlap; i++){
+                for (int j=0; j<3; j++){
+                    buffer[i][j] = nextBuffer[i][j];
+                }
+            }
+        }
+//        int sensor = event.sensor.getType();
+//        float[] values = event.values;
+//        if(sensor == Sensor.TYPE_ACCELEROMETER) {
+//            long curTime = System.currentTimeMillis();
+//            if(lastUpdate == 0){
+//                lastUpdate = curTime;
+//                last_x = event.values[0];
+//                last_y = event.values[1];
+//                last_z = event.values[2];
+//            }
+//            // Only allows one update every 100ms
+//            else if ((curTime - lastUpdate) > 100) {
+//                long diffTime = (curTime - lastUpdate);
+//                lastUpdate = curTime;
+//                float x = values[0];
+//                float y = values[1];
+//                float z = values[2];
+//
+//                // Delvin: Smash
+//                if (values[2] > SMASH_THRESHOLD) {
+//                    Log.i("sensor", "running");
+//                    Log.e("Accelerometer Triggered", " " + x + " " + y + " " + z);
+//                    playSmashSound();
+//
+//                } else { // Krystal: Shake
+//                    float speed = (x + y + z - last_x - last_y - last_z) / diffTime * 10000;
+//                    if (speed > SHAKE_THRESHOLD) {
+//                        Log.d("sensor", "shake detected w/ speed: " + speed);
+//                        playGuitarChordOrNote();
+//                    }
+//                }
+//                last_x = x;
+//                last_y = y;
+//                last_z = z;
+//            }
+//        }
     }
 
     public void onAccuracyChanged(Sensor sensor, int accuracy) {
