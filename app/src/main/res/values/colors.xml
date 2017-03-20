@@ -3,4 +3,11 @@
     <color name="colorPrimary">#3F51B5</color>
     <color name="colorPrimaryDark">#303F9F</color>
     <color name="colorAccent">#FF4081</color>
+
+    <color name="colorGuitarButton1">#3884ff</color>
+    <color name="colorGuitarButton2">#37e1ff</color>
+    <color name="colorGuitarButton3">#36ff9e</color>
+    <color name="colorGuitarButton4">#a4ff35</color>
+    <color name="colorGuitarButton5">#ffa734</color>
+    <color name="colorGuitarButton6">#ff3399</color>
 </resources>
