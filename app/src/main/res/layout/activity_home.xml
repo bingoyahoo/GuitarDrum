@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/activity_home"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:background="@drawable/home_background"
+
+    tools:context="sg.edu.nus.guitardrum.HomeActivity">
+    <LinearLayout android:orientation="vertical" android:layout_height="fill_parent" android:layout_width="fill_parent"
+        >
+
+        <LinearLayout android:layout_weight="1" android:layout_height="fill_parent" android:layout_width="fill_parent"
+            android:weightSum="1" android:padding="25dp" android:id="@+id/guitar_view">
+
+            <ImageButton
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:scaleType="fitCenter"
+                android:background="@null"
+                app:srcCompat="@drawable/home_guitar_button"
+                android:id="@+id/imageButton_home_guitar"
+                android:cropToPadding="false"
+                android:layout_weight="1" />
+        </LinearLayout>
+        <LinearLayout android:layout_weight="1" android:layout_height="fill_parent" android:layout_width="fill_parent"  android:padding="35dp"  android:id="@+id/drum_view">
+
+            <ImageButton
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:scaleType="fitCenter"
+                android:background="@null"
+                app:srcCompat="@drawable/home_drum_button"
+                android:id="@+id/imageButton_home_drum"
+                android:cropToPadding="false"
+                android:layout_weight="1" />
+        </LinearLayout>
+
+    </LinearLayout>
+</RelativeLayout>
