@@ -11,7 +11,7 @@
         <activity
             android:name=".MainActivity"
             android:configChanges="keyboardHidden|orientation|screenSize"
-            android:screenOrientation="portrait"></activity>
+            android:screenOrientation="portrait" />
         <activity
             android:name=".DrumActivity"
             android:configChanges="keyboardHidden|orientation|screenSize"
@@ -25,7 +25,8 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".GuitarActivity"></activity>
+        <activity android:name=".GuitarActivity" />
+        <activity android:name=".NewDrumActivity"></activity>
     </application>
 
 </manifest>

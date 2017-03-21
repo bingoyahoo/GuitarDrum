@@ -2,154 +2,95 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/activity_guitar"
+    android:id="@+id/activity_new_drum"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="sg.edu.nus.guitardrum.GuitarActivity">
+    tools:context="sg.edu.nus.guitardrum.NewDrumActivity">
 
     <com.skyfishjy.library.RippleBackground
-        xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
-        android:id="@+id/ripple_bg_1"
-        app:rb_color="@color/colorGuitarButton1"
-        app:rb_radius="50dp"
-        app:rb_rippleAmount="1"
-        app:rb_duration="1500"
-        app:rb_scale="8">
-    </com.skyfishjy.library.RippleBackground>
-    <com.skyfishjy.library.RippleBackground
-        xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
-        android:id="@+id/ripple_bg_2"
-        app:rb_color="@color/colorGuitarButton2"
-        app:rb_radius="50dp"
-        app:rb_rippleAmount="1"
-        app:rb_duration="1500"
-        app:rb_scale="8">
-    </com.skyfishjy.library.RippleBackground>
-    <com.skyfishjy.library.RippleBackground
-        xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
-        android:id="@+id/ripple_bg_3"
-        app:rb_color="@color/colorGuitarButton3"
-        app:rb_radius="50dp"
-        app:rb_rippleAmount="1"
-        app:rb_duration="1500"
-        app:rb_scale="8">
-    </com.skyfishjy.library.RippleBackground>
-    <com.skyfishjy.library.RippleBackground
-        xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
-        android:id="@+id/ripple_bg_4"
-        app:rb_color="@color/colorGuitarButton4"
-        app:rb_radius="50dp"
-        app:rb_rippleAmount="1"
-        app:rb_duration="1500"
-        app:rb_scale="8">
-    </com.skyfishjy.library.RippleBackground>
-    <com.skyfishjy.library.RippleBackground
-        xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
-        android:id="@+id/ripple_bg_5"
-        app:rb_color="@color/colorGuitarButton5"
-        app:rb_radius="50dp"
-        app:rb_rippleAmount="1"
-        app:rb_duration="1500"
-        app:rb_scale="8">
-    </com.skyfishjy.library.RippleBackground>
-    <com.skyfishjy.library.RippleBackground
-        xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
-        android:id="@+id/ripple_bg_6"
-        app:rb_color="@color/colorGuitarButton6"
+        android:id="@+id/drum_ripple_bg_1"
+        app:rb_color="@color/colorDrumButton1"
         app:rb_radius="50dp"
         app:rb_rippleAmount="1"
         app:rb_duration="1500"
         app:rb_scale="8">
     </com.skyfishjy.library.RippleBackground>
 
-        <FrameLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="bottom|right"
-            android:layout_marginTop="40dp"
-            android:layout_alignParentTop="true"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentStart="true"
-            android:layout_marginLeft="85dp"
-            android:layout_marginStart="85dp"
-            android:id="@+id/frameLayout">
-            <android.support.design.widget.FloatingActionButton
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:clickable="true"
-                app:fabSize="mini"
-                android:id="@+id/string_button_1"
-                app:backgroundTint="@color/colorGuitarButton1"/>
-            <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:text="1"
-            android:elevation="16dp"
-            android:textColor="@android:color/white"
-            android:textAppearance="?android:attr/textAppearanceMedium" />
-        </FrameLayout>
+    <com.skyfishjy.library.RippleBackground
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:id="@+id/drum_ripple_bg_2"
+        app:rb_color="@color/colorDrumButton2"
+        app:rb_radius="50dp"
+        app:rb_rippleAmount="1"
+        app:rb_duration="1500"
+        app:rb_scale="8">
+    </com.skyfishjy.library.RippleBackground>
+
+    <com.skyfishjy.library.RippleBackground
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:id="@+id/drum_ripple_bg_3"
+        app:rb_color="@color/colorDrumButton3"
+        app:rb_radius="50dp"
+        app:rb_rippleAmount="1"
+        app:rb_duration="1500"
+        app:rb_scale="8">
+    </com.skyfishjy.library.RippleBackground>
+
+    <com.skyfishjy.library.RippleBackground
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:id="@+id/drum_ripple_bg_4"
+        app:rb_color="@color/colorDrumButton4"
+        app:rb_radius="50dp"
+        app:rb_rippleAmount="1"
+        app:rb_duration="1500"
+        app:rb_scale="8">
+    </com.skyfishjy.library.RippleBackground>
+
+    <com.skyfishjy.library.RippleBackground
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:id="@+id/drum_ripple_bg_5"
+        app:rb_color="@color/colorDrumButton5"
+        app:rb_radius="50dp"
+        app:rb_rippleAmount="1"
+        app:rb_duration="1500"
+        app:rb_scale="8">
+    </com.skyfishjy.library.RippleBackground>
+
+    <com.skyfishjy.library.RippleBackground
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:id="@+id/drum_ripple_bg_6"
+        app:rb_color="@color/colorDrumButton6"
+        app:rb_radius="50dp"
+        app:rb_rippleAmount="1"
+        app:rb_duration="1500"
+        app:rb_scale="8"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true">
+
+    </com.skyfishjy.library.RippleBackground>
+
     <FrameLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|right"
-        android:layout_marginTop="120dp"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:layout_marginLeft="85dp"
-        android:layout_marginStart="85dp">
+        android:layout_marginTop="140dp"
+        android:layout_marginLeft="70dp"
+        android:id="@+id/frameLayout4">
         <android.support.design.widget.FloatingActionButton
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:clickable="true"
             app:fabSize="mini"
-            android:id="@+id/string_button_2"
-            app:backgroundTint="@color/colorGuitarButton2"/>
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:text="2"
-            android:elevation="16dp"
-            android:textColor="@android:color/white"
-            android:textAppearance="?android:attr/textAppearanceMedium" />
-    </FrameLayout>
-    <FrameLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="bottom|right"
-        android:layout_marginTop="200dp"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:layout_marginLeft="85dp"
-        android:layout_marginStart="85dp">
-        <android.support.design.widget.FloatingActionButton
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:clickable="true"
-            app:fabSize="mini"
-            android:id="@+id/string_button_3"
-            app:backgroundTint="@color/colorGuitarButton3"/>
+            android:id="@+id/drum_button_3"
+            app:backgroundTint="@color/colorDrumButton3"/>
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -159,23 +100,99 @@
             android:textColor="@android:color/white"
             android:textAppearance="?android:attr/textAppearanceMedium" />
     </FrameLayout>
+
     <FrameLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|right"
-        android:layout_marginTop="280dp"
+        android:layout_marginTop="240dp"
+        android:layout_marginLeft="70dp"
         android:layout_alignParentTop="true"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
-        android:layout_marginLeft="85dp"
-        android:layout_marginStart="85dp">
+        android:id="@+id/frameLayout2">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:text="5"
+            android:elevation="16dp"
+            android:textColor="@android:color/white"
+            android:textAppearance="?android:attr/textAppearanceMedium" />
+
         <android.support.design.widget.FloatingActionButton
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:clickable="true"
             app:fabSize="mini"
-            android:id="@+id/string_button_4"
-            app:backgroundTint="@color/colorGuitarButton4"/>
+            android:id="@+id/drum_button_5"
+            app:backgroundTint="@color/colorDrumButton5"/>
+    </FrameLayout>
+
+    <FrameLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|right"
+        android:layout_marginTop="40dp"
+        android:layout_marginLeft="70dp"
+        android:id="@+id/frameLayout3">
+        <android.support.design.widget.FloatingActionButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:clickable="true"
+            app:fabSize="mini"
+            android:id="@+id/drum_button_1"
+            app:backgroundTint="@color/colorDrumButton1"
+            fabSize="normal" />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:text="1"
+            android:elevation="16dp"
+            android:textColor="@android:color/white"
+            android:textAppearance="?android:attr/textAppearanceMedium" />
+    </FrameLayout>
+
+    <FrameLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|right"
+        android:layout_marginTop="40dp"
+        android:layout_marginLeft="260dp"
+        android:id="@+id/frameLayout5">
+        <android.support.design.widget.FloatingActionButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:clickable="true"
+            app:fabSize="mini"
+            android:id="@+id/drum_button_2"
+            app:backgroundTint="@color/colorDrumButton2"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:text="2"
+            android:elevation="16dp"
+            android:textColor="@android:color/white"
+            android:textAppearance="?android:attr/textAppearanceMedium" />
+    </FrameLayout>
+
+    <FrameLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|right"
+        android:layout_marginTop="140dp"
+        android:layout_marginLeft="260dp"
+        android:id="@+id/frameLayout6">
+        <android.support.design.widget.FloatingActionButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:clickable="true"
+            app:fabSize="mini"
+            android:id="@+id/drum_button_4"
+            app:backgroundTint="@color/colorDrumButton4"/>
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -190,46 +207,15 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|right"
-        android:layout_marginTop="360dp"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:layout_marginLeft="85dp"
-        android:layout_marginStart="85dp">
+        android:layout_marginTop="240dp"
+        android:layout_marginLeft="260dp">
         <android.support.design.widget.FloatingActionButton
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:clickable="true"
             app:fabSize="mini"
-            android:id="@+id/string_button_5"
-            app:backgroundTint="@color/colorGuitarButton5"/>
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:text="5"
-            android:elevation="16dp"
-            android:textColor="@android:color/white"
-            android:textAppearance="?android:attr/textAppearanceMedium" />
-    </FrameLayout>
-
-    <FrameLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="bottom|right"
-        android:layout_marginTop="440dp"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:layout_marginLeft="85dp"
-        android:layout_marginStart="85dp">
-        <android.support.design.widget.FloatingActionButton
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:clickable="true"
-            app:fabSize="mini"
-            android:id="@+id/string_button_6"
-            app:backgroundTint="@color/colorGuitarButton6"/>
+            android:id="@+id/drum_button_6"
+            app:backgroundTint="@color/colorDrumButton6"/>
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -239,4 +225,5 @@
             android:textColor="@android:color/white"
             android:textAppearance="?android:attr/textAppearanceMedium" />
     </FrameLayout>
+
 </RelativeLayout>

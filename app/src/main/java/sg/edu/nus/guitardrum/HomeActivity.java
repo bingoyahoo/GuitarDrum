@@ -85,7 +85,7 @@ public class HomeActivity extends AppCompatActivity {
                         } else {
                             drumView.setPadding(oldPadding, oldPadding, oldPadding, oldPadding);
                             drumPlayer.start();
-                            //startActivity(new Intent(HomeActivity.this, MainActivity.class));
+                            startActivity(new Intent(HomeActivity.this, NewDrumActivity.class));
                         }
                         break;
                     case MotionEvent.ACTION_MOVE:

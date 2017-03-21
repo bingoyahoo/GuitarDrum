@@ -10,4 +10,12 @@
     <color name="colorGuitarButton4">#a4ff35</color>
     <color name="colorGuitarButton5">#ffa734</color>
     <color name="colorGuitarButton6">#ff3399</color>
+
+    <color name="colorDrumButton1">#a50606</color>
+    <color name="colorDrumButton2">#9da506</color>
+    <color name="colorDrumButton3">#06a515</color>
+    <color name="colorDrumButton4">#0660a5</color>
+    <color name="colorDrumButton5">#5506a5</color>
+    <color name="colorDrumButton6">#a5065d</color>
+    <color name="colorRippleBg">#ffffff</color>
 </resources>
