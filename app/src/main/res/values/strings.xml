@@ -13,4 +13,5 @@
     <string name="toggle_instruments">Toggle Instruments</string>
     <string name="drum_title">DRUM</string>
     <string name="guitar_title">GUITAR</string>
+    <string name="train_classifier">Train Classifier</string>
 </resources>
