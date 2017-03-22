@@ -1,17 +1,16 @@
 package sg.edu.nus.guitardrum;
 
 import android.content.Intent;
-import android.graphics.Rect;
 import android.media.MediaPlayer;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
-import android.content.Context;
+import android.widget.Toast;
 
-public class HomeActivity extends AppCompatActivity {
+public class HomeActivity extends AppCompatActivity  {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -28,6 +27,21 @@ public class HomeActivity extends AppCompatActivity {
         // Drum beat taken from https://www.freesoundeffects.com/free-sounds/drum-loops-10031/
         final MediaPlayer guitarPlayer = MediaPlayer.create(this, R.raw.guitar_intro);
         final MediaPlayer drumPlayer = MediaPlayer.create(this, R.raw.drum_intro);
+
+        FeaturesExtractor d = null;
+        try {
+            d = new FeaturesExtractor();
+        } catch (Exception e) {
+            Toast.makeText(this, "FeaturesExtractor cannot launch", Toast.LENGTH_SHORT).show();
+        }
+
+        try {
+            d.calculateFeatuers();
+//            d.calculateFeatuersMean();
+        } catch (Exception e) {
+            Toast.makeText(this, "Features problem", Toast.LENGTH_SHORT).show();
+        }
+
 
         /*
             To be added:
