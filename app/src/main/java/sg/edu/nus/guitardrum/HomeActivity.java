@@ -68,8 +68,6 @@ public class HomeActivity extends AppCompatActivity  implements SensorEventListe
 
         featureExtractor = null;
 
-
-
         /*
             To be added:
             Credit Page or other forms to credit the author
@@ -177,35 +175,43 @@ public class HomeActivity extends AppCompatActivity  implements SensorEventListe
                 long timeInterval = event.timestamp - lastTimeStamp;
                 //Log.d("timestamp", "timediff " + timeInterval);
                 //Put values into buffer
-                if(timeInterval > sampling_interval + 2 * sampling_interval_error_margin){
-                    //Will this happen?
-//                    Log.d("buffer", "timediff is twice error margin" + timeInterval);
-                }
-                if(timeInterval > sampling_interval + sampling_interval_error_margin){
-                    //If timestamp > sampling rate
-                    //interpolate values
-                    long ratio = timeInterval / sampling_interval;
-                    buffer[0][bufferIndex]= last_x + (values[0] - last_x) * ratio;
-                    buffer[1][bufferIndex] = last_y + (values[1] - last_y) * ratio;
-                    buffer[2][bufferIndex] = last_z + (values[2] - last_z) * ratio;
-                    last_x = buffer[0][bufferIndex];
-                    last_y = buffer[1][bufferIndex];
-                    last_z = buffer[2][bufferIndex];
-                    lastTimeStamp = lastTimeStamp + sampling_interval;
-                }
-                else if (timeInterval < sampling_interval - sampling_interval_error_margin){
-                    //don't do anything
-                    //Not sure if we should do this, or extrapolate values?
-                }
-                else {
-                    buffer[0][bufferIndex] = values[0];
-                    buffer[1][bufferIndex] = values[1];
-                    buffer[2][bufferIndex] = values[2];
-                    last_x = values[0];
-                    last_y = values[1];
-                    last_z = values[2];
-                    lastTimeStamp = event.timestamp;
-                }
+//                if(timeInterval > sampling_interval + 2 * sampling_interval_error_margin){
+//                    //Will this happen?
+////                    Log.d("buffer", "timediff is twice error margin" + timeInterval);
+//                }
+//                if(timeInterval > sampling_interval + sampling_interval_error_margin){
+//                    //If timestamp > sampling rate
+//                    //interpolate values
+                    //TODO: why is this not working?
+//                    long ratio = timeInterval / sampling_interval;
+//                    buffer[0][bufferIndex]= last_x + (values[0] - last_x) * ratio;
+//                    buffer[1][bufferIndex] = last_y + (values[1] - last_y) * ratio;
+//                    buffer[2][bufferIndex] = last_z + (values[2] - last_z) * ratio;
+//                    last_x = buffer[0][bufferIndex];
+//                    last_y = buffer[1][bufferIndex];
+//                    last_z = buffer[2][bufferIndex];
+//                    lastTimeStamp = lastTimeStamp + sampling_interval;
+//                }
+//                else if (timeInterval < sampling_interval - sampling_interval_error_margin){
+//                    //don't do anything
+//                    //Not sure if we should do this, or extrapolate values?
+//                }
+//                else {
+//                    buffer[0][bufferIndex] = values[0];
+//                    buffer[1][bufferIndex] = values[1];
+//                    buffer[2][bufferIndex] = values[2];
+//                    last_x = values[0];
+//                    last_y = values[1];
+//                    last_z = values[2];
+//                    lastTimeStamp = event.timestamp;
+//                }
+                buffer[0][bufferIndex] = values[0];
+                buffer[1][bufferIndex] = values[1];
+                buffer[2][bufferIndex] = values[2];
+                last_x = values[0];
+                last_y = values[1];
+                last_z = values[2];
+                lastTimeStamp = event.timestamp;
                 bufferIndex += 1;
                 //buffer is full
                 if(bufferIndex == bufferLen){
