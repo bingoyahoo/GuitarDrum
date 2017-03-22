@@ -15,24 +15,19 @@ import android.widget.RelativeLayout;
 
 import com.skyfishjy.library.*;
 
-/*
-            Make sure to Sync Project With Gradle Files (Tools -> Android -> Sync Project With Gradle Files) and rebuild the app
-            for usage of RippleBackground refer to: https://github.com/skyfishjy/android-ripple-background
-*/
-
-public class GuitarActivity extends AppCompatActivity {
+public class NewDrumActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_guitar);
+        setContentView(R.layout.activity_new_drum);
 
-        FloatingActionButton fab1 = (FloatingActionButton)findViewById(R.id.string_button_1);
-        FloatingActionButton fab2 = (FloatingActionButton)findViewById(R.id.string_button_2);
-        FloatingActionButton fab3 = (FloatingActionButton)findViewById(R.id.string_button_3);
-        FloatingActionButton fab4 = (FloatingActionButton)findViewById(R.id.string_button_4);
-        FloatingActionButton fab5 = (FloatingActionButton)findViewById(R.id.string_button_5);
-        FloatingActionButton fab6 = (FloatingActionButton)findViewById(R.id.string_button_6);
+        FloatingActionButton fab1 = (FloatingActionButton)findViewById(R.id.drum_button_1);
+        FloatingActionButton fab2 = (FloatingActionButton)findViewById(R.id.drum_button_2);
+        FloatingActionButton fab3 = (FloatingActionButton)findViewById(R.id.drum_button_3);
+        FloatingActionButton fab4 = (FloatingActionButton)findViewById(R.id.drum_button_4);
+        FloatingActionButton fab5 = (FloatingActionButton)findViewById(R.id.drum_button_5);
+        FloatingActionButton fab6 = (FloatingActionButton)findViewById(R.id.drum_button_6);
 
         fab1.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -73,13 +68,13 @@ public class GuitarActivity extends AppCompatActivity {
     }
 
     public void startAllAnimation(int index) {
-        final RelativeLayout relativeLayout = (RelativeLayout)findViewById(R.id.activity_guitar);
+        final RelativeLayout relativeLayout = (RelativeLayout)findViewById(R.id.activity_new_drum);
         startRippleAnimation(index);
         startColorTransition(index);
     }
 
     private void startColorTransition(int index) {
-        final RelativeLayout relativeLayout = (RelativeLayout)findViewById(R.id.activity_guitar);
+        final RelativeLayout relativeLayout = (RelativeLayout)findViewById(R.id.activity_new_drum);
 
         int color = Color.TRANSPARENT;
         Drawable background = relativeLayout.getBackground();
@@ -88,22 +83,22 @@ public class GuitarActivity extends AppCompatActivity {
         int colorEnd = Color.TRANSPARENT;
         switch (index) {
             case 1:
-                colorEnd =  ContextCompat.getColor(getApplicationContext(), R.color.colorGuitarButton1);
+                colorEnd =  ContextCompat.getColor(getApplicationContext(), R.color.colorDrumButton1);
                 break;
             case 2:
-                colorEnd =  ContextCompat.getColor(getApplicationContext(), R.color.colorGuitarButton2);
+                colorEnd =  ContextCompat.getColor(getApplicationContext(), R.color.colorDrumButton2);
                 break;
             case 3:
-                colorEnd =  ContextCompat.getColor(getApplicationContext(), R.color.colorGuitarButton3);
+                colorEnd =  ContextCompat.getColor(getApplicationContext(), R.color.colorDrumButton3);
                 break;
             case 4:
-                colorEnd =  ContextCompat.getColor(getApplicationContext(), R.color.colorGuitarButton4);
+                colorEnd =  ContextCompat.getColor(getApplicationContext(), R.color.colorDrumButton4);
                 break;
             case 5:
-                colorEnd =  ContextCompat.getColor(getApplicationContext(), R.color.colorGuitarButton5);
+                colorEnd =  ContextCompat.getColor(getApplicationContext(), R.color.colorDrumButton5);
                 break;
             case 6:
-                colorEnd =  ContextCompat.getColor(getApplicationContext(), R.color.colorGuitarButton6);
+                colorEnd =  ContextCompat.getColor(getApplicationContext(), R.color.colorDrumButton6);
                 break;
         }
 
@@ -125,25 +120,25 @@ public class GuitarActivity extends AppCompatActivity {
         final RippleBackground rippleBackground;
         switch (index) {
             case 1:
-                rippleBackground=(RippleBackground)findViewById(R.id.ripple_bg_1);
+                rippleBackground=(RippleBackground)findViewById(R.id.drum_ripple_bg_1);
                 break;
             case 2:
-                rippleBackground=(RippleBackground)findViewById(R.id.ripple_bg_2);
+                rippleBackground=(RippleBackground)findViewById(R.id.drum_ripple_bg_2);
                 break;
             case 3:
-                rippleBackground=(RippleBackground)findViewById(R.id.ripple_bg_3);
+                rippleBackground=(RippleBackground)findViewById(R.id.drum_ripple_bg_3);
                 break;
             case 4:
-                rippleBackground=(RippleBackground)findViewById(R.id.ripple_bg_4);
+                rippleBackground=(RippleBackground)findViewById(R.id.drum_ripple_bg_4);
                 break;
             case 5:
-                rippleBackground=(RippleBackground)findViewById(R.id.ripple_bg_5);
+                rippleBackground=(RippleBackground)findViewById(R.id.drum_ripple_bg_5);
                 break;
             case 6:
-                rippleBackground=(RippleBackground)findViewById(R.id.ripple_bg_6);
+                rippleBackground=(RippleBackground)findViewById(R.id.drum_ripple_bg_6);
                 break;
             default:
-                rippleBackground=(RippleBackground)findViewById(R.id.ripple_bg_1);
+                rippleBackground=(RippleBackground)findViewById(R.id.drum_ripple_bg_1);
         }
         playRippleAnimation(rippleBackground);
     }

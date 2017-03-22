@@ -13,7 +13,7 @@
         <activity
             android:name=".MainActivity"
             android:configChanges="keyboardHidden|orientation|screenSize"
-            android:screenOrientation="portrait"></activity>
+            android:screenOrientation="portrait" />
         <activity
             android:name=".DrumActivity"
             android:configChanges="keyboardHidden|orientation|screenSize"
@@ -30,7 +30,8 @@
 
         <activity android:name=".ClassificationActivity">
         </activity>
-        <activity android:name=".GuitarActivity"></activity>
+        <activity android:name=".GuitarActivity" />
+        <activity android:name=".NewDrumActivity"/>
     </application>
 
 </manifest>
