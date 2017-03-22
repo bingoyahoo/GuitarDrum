@@ -29,19 +29,26 @@ public class FeaturesExtractor {
 	double[] power_spectrum;
 	int window_size = 1024;
 	
-	// API to manipulate samples, sample rate and spectrum
-	public FeaturesExtractor() throws Exception {
-//		audio = new AudioSamples(new File("bartok.wav"), "", true);
-//		sampling_rate = audio.getSamplingRate();
-//		samples = audio.getSamplesMixedDown();
-//		windowed_samples = audio.getSampleWindowsMixedDown(window_size);
+//	// API to manipulate samples, sample rate and spectrum
+//	public FeaturesExtractor() throws Exception {
+//		samples = new double[]{1.0, 2.0, 3.0, 1.0, 2.0, 3.0, 1.0, 2.0, 3.0, 1.0, 2.0, 3.0, };
+//		sampling_rate = 100;
+//
+//		MagnitudeSpectrum ms = new MagnitudeSpectrum();
+//		mag_spectrum = ms.extractFeature(samples, sampling_rate, null);
+//
+//		PowerSpectrum ps = new PowerSpectrum();
+//		power_spectrum = ps.extractFeature(samples, sampling_rate, null);
+//	}
 
-		samples = new double[]{1.0, 2.0, 3.0, 1.0, 2.0, 3.0, 1.0, 2.0, 3.0, 1.0, 2.0, 3.0, };
-		sampling_rate = 100;
-		
+	// API to manipulate samples, sample rate and spectrum
+	public FeaturesExtractor(double[] buffer_samples, double buffer_sampling_rate) throws Exception {
+		samples = buffer_samples;
+		sampling_rate = buffer_sampling_rate;
+
 		MagnitudeSpectrum ms = new MagnitudeSpectrum();
 		mag_spectrum = ms.extractFeature(samples, sampling_rate, null);
-		
+
 		PowerSpectrum ps = new PowerSpectrum();
 		power_spectrum = ps.extractFeature(samples, sampling_rate, null);
 	}

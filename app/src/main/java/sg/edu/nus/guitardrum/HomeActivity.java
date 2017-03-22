@@ -16,27 +16,30 @@ import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
+import java.util.Arrays;
+
 public class HomeActivity extends AppCompatActivity  implements SensorEventListener {
 
     //variables for checking sampling rate
     private final static long sampling_interval = 10000000; //ns
     private final static long sampling_interval_error_margin = 2000000;//20%
-    private float last_x;
-    private float last_y;
-    private float last_z;
+    private double last_x;
+    private double last_y;
+    private double last_z;
     private long lastTimeStamp;
     //Buffer variables
     private boolean bufferisReady = false;
-    private float[][] buffer;
-    private float[][] nextBuffer;
-//    private final static int bufferLen = 1024;
-//    private final static int bufferOverlap = 512;
-    private final static int bufferLen = 64;
-    private final static int bufferOverlap = 32;
+    private double[][] buffer;
+    private double[][] nextBuffer;
+    private final static int bufferLen = 1024;
+    private final static int bufferOverlap = 512;
+//    private final static int bufferLen = 64;
+//    private final static int bufferOverlap = 32;
     private int bufferIndex;
 
     private SensorManager mSensorManager;
     private Sensor mAccelerometer;
+    private FeaturesExtractor featureExtractor;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,23 +62,12 @@ public class HomeActivity extends AppCompatActivity  implements SensorEventListe
 
 
         // For Buffers
-        buffer = new float[bufferLen][3];
-        nextBuffer = new float[bufferLen][3];
+        buffer = new double[3][bufferLen];
+        nextBuffer = new double[3][bufferLen];
         bufferIndex = 0;
 
-        FeaturesExtractor d = null;
-        try {
-            d = new FeaturesExtractor();
-        } catch (Exception e) {
-            Toast.makeText(this, "FeaturesExtractor cannot launch", Toast.LENGTH_SHORT).show();
-        }
+        featureExtractor = null;
 
-        try {
-            d.calculateFeatuers();
-//            d.calculateFeatuersMean();
-        } catch (Exception e) {
-            Toast.makeText(this, "Features problem", Toast.LENGTH_SHORT).show();
-        }
 
 
         /*
@@ -163,7 +155,7 @@ public class HomeActivity extends AppCompatActivity  implements SensorEventListe
             //copy nextBuffer into buffer
             for (int i = 0; i < bufferOverlap; i++) {
                 for (int j = 0; j < 3; j++) {
-                    buffer[i][j] = nextBuffer[i][j];
+                    buffer[j][i] = nextBuffer[j][i];
                 }
             }
         }
@@ -179,26 +171,26 @@ public class HomeActivity extends AppCompatActivity  implements SensorEventListe
                 lastTimeStamp = event.timestamp;
             }
             else {
-                Log.v("Accelerometer x", String.valueOf(values[0]));
-                Log.v("Accelerometer y", String.valueOf(values[1]));
-                Log.v("Accelerometer z", String.valueOf(values[2]));
+//                Log.v("Accelerometer x", String.valueOf(values[0]));
+//                Log.v("Accelerometer y", String.valueOf(values[1]));
+//                Log.v("Accelerometer z", String.valueOf(values[2]));
                 long timeInterval = event.timestamp - lastTimeStamp;
                 //Log.d("timestamp", "timediff " + timeInterval);
                 //Put values into buffer
                 if(timeInterval > sampling_interval + 2 * sampling_interval_error_margin){
                     //Will this happen?
-                    Log.d("buffer", "timediff is twice error margin" + timeInterval);
+//                    Log.d("buffer", "timediff is twice error margin" + timeInterval);
                 }
                 if(timeInterval > sampling_interval + sampling_interval_error_margin){
                     //If timestamp > sampling rate
                     //interpolate values
                     long ratio = timeInterval / sampling_interval;
-                    buffer[bufferIndex][0] = last_x + (values[0] - last_x) * ratio;
-                    buffer[bufferIndex][1] = last_y + (values[1] - last_y) * ratio;
-                    buffer[bufferIndex][2] = last_z + (values[2] - last_z) * ratio;
-                    last_x = buffer[bufferIndex][0];
-                    last_y = buffer[bufferIndex][1];
-                    last_z = buffer[bufferIndex][2];
+                    buffer[0][bufferIndex]= last_x + (values[0] - last_x) * ratio;
+                    buffer[1][bufferIndex] = last_y + (values[1] - last_y) * ratio;
+                    buffer[2][bufferIndex] = last_z + (values[2] - last_z) * ratio;
+                    last_x = buffer[0][bufferIndex];
+                    last_y = buffer[1][bufferIndex];
+                    last_z = buffer[2][bufferIndex];
                     lastTimeStamp = lastTimeStamp + sampling_interval;
                 }
                 else if (timeInterval < sampling_interval - sampling_interval_error_margin){
@@ -206,9 +198,9 @@ public class HomeActivity extends AppCompatActivity  implements SensorEventListe
                     //Not sure if we should do this, or extrapolate values?
                 }
                 else {
-                    buffer[bufferIndex][0] = values[0];
-                    buffer[bufferIndex][1] = values[1];
-                    buffer[bufferIndex][2] = values[2];
+                    buffer[0][bufferIndex] = values[0];
+                    buffer[1][bufferIndex] = values[1];
+                    buffer[2][bufferIndex] = values[2];
                     last_x = values[0];
                     last_y = values[1];
                     last_z = values[2];
@@ -221,7 +213,7 @@ public class HomeActivity extends AppCompatActivity  implements SensorEventListe
                     //copy values into new buffer
                     for(int i = 0; i < bufferOverlap; i++){
                         for(int j=0; j<3; j++){
-                            nextBuffer[i][j] = buffer[i + bufferOverlap][j];
+                            nextBuffer[j][i] = buffer[j][i + bufferOverlap];
                         }
                     }
                     bufferIndex = bufferOverlap;
@@ -231,9 +223,22 @@ public class HomeActivity extends AppCompatActivity  implements SensorEventListe
         }
     }
 
-    private void doSomeCalculations(float[][] buffer){
-        Log.v("Calculating", " features");
+    private void doSomeCalculations(double[][] buffer){
+//        Log.v("Calculating", " features");
         //dummy function
+        try {
+            Log.v("Buffer is ", Arrays.toString(buffer[0]));
+            featureExtractor = new FeaturesExtractor(buffer[0], 100);
+        } catch (Exception e) {
+            Toast.makeText(this, "FeaturesExtractor cannot launch", Toast.LENGTH_SHORT).show();
+        }
+
+        try {
+            featureExtractor.calculateFeatuers();
+//            d.calculateFeatuersMean();
+        } catch (Exception e) {
+            Toast.makeText(this, "Features problem", Toast.LENGTH_SHORT).show();
+        }
     }
 
     @Override
