@@ -1,21 +1,50 @@
 package sg.edu.nus.guitardrum;
 
+import android.content.Context;
 import android.content.Intent;
+import android.hardware.Sensor;
+import android.hardware.SensorEvent;
+import android.hardware.SensorEventListener;
+import android.hardware.SensorManager;
 import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
-public class HomeActivity extends AppCompatActivity  {
+public class HomeActivity extends AppCompatActivity  implements SensorEventListener {
+
+    //variables for checking sampling rate
+    private final static long sampling_interval = 10000000; //ns
+    private final static long sampling_interval_error_margin = 2000000;//20%
+    private float last_x;
+    private float last_y;
+    private float last_z;
+    private long lastTimeStamp;
+    //Buffer variables
+    private boolean bufferisReady = false;
+    private float[][] buffer;
+    private float[][] nextBuffer;
+//    private final static int bufferLen = 1024;
+//    private final static int bufferOverlap = 512;
+    private final static int bufferLen = 64;
+    private final static int bufferOverlap = 32;
+    private int bufferIndex;
+
+    private SensorManager mSensorManager;
+    private Sensor mAccelerometer;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
+        // For playing guitar sounds when acceleration detected
+        mSensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
+        mAccelerometer = mSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
 
         final ImageButton guitarButton = (ImageButton)findViewById(R.id.imageButton_home_guitar);
         final ImageButton drumButton = (ImageButton)findViewById(R.id.imageButton_home_drum);
@@ -27,6 +56,12 @@ public class HomeActivity extends AppCompatActivity  {
         // Drum beat taken from https://www.freesoundeffects.com/free-sounds/drum-loops-10031/
         final MediaPlayer guitarPlayer = MediaPlayer.create(this, R.raw.guitar_intro);
         final MediaPlayer drumPlayer = MediaPlayer.create(this, R.raw.drum_intro);
+
+
+        // For Buffers
+        buffer = new float[bufferLen][3];
+        nextBuffer = new float[bufferLen][3];
+        bufferIndex = 0;
 
         FeaturesExtractor d = null;
         try {
@@ -115,6 +150,102 @@ public class HomeActivity extends AppCompatActivity  {
                 return false;
             }
         });
+    }
+
+    public void onAccuracyChanged(Sensor sensor, int accuracy) {
+    }
+
+    public void onSensorChanged(SensorEvent event) {
+        makeBuffer(event);
+        if (bufferisReady) {
+            doSomeCalculations(buffer);
+            bufferisReady = false;
+            //copy nextBuffer into buffer
+            for (int i = 0; i < bufferOverlap; i++) {
+                for (int j = 0; j < 3; j++) {
+                    buffer[i][j] = nextBuffer[i][j];
+                }
+            }
+        }
+    }
+
+
+    private void makeBuffer(SensorEvent event){
+        int sensor = event.sensor.getType();
+        float[] values = event.values;
+
+        if(sensor == Sensor.TYPE_ACCELEROMETER) {
+            if(lastTimeStamp == 0){
+                lastTimeStamp = event.timestamp;
+            }
+            else {
+                Log.v("Accelerometer x", String.valueOf(values[0]));
+                Log.v("Accelerometer y", String.valueOf(values[1]));
+                Log.v("Accelerometer z", String.valueOf(values[2]));
+                long timeInterval = event.timestamp - lastTimeStamp;
+                //Log.d("timestamp", "timediff " + timeInterval);
+                //Put values into buffer
+                if(timeInterval > sampling_interval + 2 * sampling_interval_error_margin){
+                    //Will this happen?
+                    Log.d("buffer", "timediff is twice error margin" + timeInterval);
+                }
+                if(timeInterval > sampling_interval + sampling_interval_error_margin){
+                    //If timestamp > sampling rate
+                    //interpolate values
+                    long ratio = timeInterval / sampling_interval;
+                    buffer[bufferIndex][0] = last_x + (values[0] - last_x) * ratio;
+                    buffer[bufferIndex][1] = last_y + (values[1] - last_y) * ratio;
+                    buffer[bufferIndex][2] = last_z + (values[2] - last_z) * ratio;
+                    last_x = buffer[bufferIndex][0];
+                    last_y = buffer[bufferIndex][1];
+                    last_z = buffer[bufferIndex][2];
+                    lastTimeStamp = lastTimeStamp + sampling_interval;
+                }
+                else if (timeInterval < sampling_interval - sampling_interval_error_margin){
+                    //don't do anything
+                    //Not sure if we should do this, or extrapolate values?
+                }
+                else {
+                    buffer[bufferIndex][0] = values[0];
+                    buffer[bufferIndex][1] = values[1];
+                    buffer[bufferIndex][2] = values[2];
+                    last_x = values[0];
+                    last_y = values[1];
+                    last_z = values[2];
+                    lastTimeStamp = event.timestamp;
+                }
+                bufferIndex += 1;
+                //buffer is full
+                if(bufferIndex == bufferLen){
+                    bufferisReady = true;
+                    //copy values into new buffer
+                    for(int i = 0; i < bufferOverlap; i++){
+                        for(int j=0; j<3; j++){
+                            nextBuffer[i][j] = buffer[i + bufferOverlap][j];
+                        }
+                    }
+                    bufferIndex = bufferOverlap;
+                }
+
+            }
+        }
+    }
+
+    private void doSomeCalculations(float[][] buffer){
+        Log.v("Calculating", " features");
+        //dummy function
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        mSensorManager.registerListener(this, mAccelerometer, SensorManager.SENSOR_DELAY_FASTEST);
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        mSensorManager.unregisterListener(this);
     }
 
 
