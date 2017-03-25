@@ -1,11 +1,13 @@
 """
-Run this script to convert a text file generated from the provided Logger app into three list of x, y and z readings
+Run this Python script to convert all text files generated from the provided Logger app into three list of x, y and z readings and append them into a file called results.txt
 
 author: Delvin Low
 """
 import re
-
 import glob
+import matplotlib.pyplot as plt
+
+TO_PLOT = False
 
 def write_array_to_file(file, array):
 	"""Write the items of an array to the file"""
@@ -14,15 +16,14 @@ def write_array_to_file(file, array):
 	items = items +"\n"
 	file.write(items)
 
-
+# Use glob and a loop to process ALL text files in a path
 text_files = glob.glob("*.txt")
-text_files.remove("results.txt")
+text_files.remove("results.txt") # Don't process existing results file
 
 file_results = open("results.txt", "w")
-
 for text_file in text_files:
 	label = text_file.split("-")[0] # Label for action
-	# Open Data File and read in a single line # TODO: use glob and a loop to process ALL text files in a path
+	# Open Data File and read in a single line 
 	with open (text_file, "r") as myfile:
 		data = myfile.read()
 
@@ -33,7 +34,9 @@ for text_file in text_files:
 	list_of_strings = accelerometer_regex.findall(data)
 
 	# Remove first number which is Fs
+	fs = list_of_strings[0]
 	del list_of_strings[0]
+	sampling_freq = fs[1]
 
 	# Go through entire data, put each of the three components readings into a list 
 	list_x_readings = []
@@ -54,12 +57,20 @@ for text_file in text_files:
 
 		count += 1
 
-	print "x: ", list_x_readings
-	print "y: ", list_y_readings
-	print "z: ", list_z_readings
+	# print "x: ", list_x_readings
+	# print "y: ", list_y_readings
+	# print "z: ", list_z_readings
+	if TO_PLOT:
+		plt.title(label)
+		plt.plot(list_x_readings, "r")
+		plt.plot(list_y_readings, "g")
+		plt.plot(list_z_readings, "b")
+		plt.ylabel('Accelerometer values')
+		plt.show()
 
 
 	# Append all label and 3 arrays into text file to pass each of this 3 arrays into Buffering and Feature Extraction on Android
+	file_results.write(sampling_freq +"\n")
 	file_results.write(label +"\n")
 	write_array_to_file(file_results, list_x_readings)
 	write_array_to_file(file_results, list_y_readings)
