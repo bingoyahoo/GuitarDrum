@@ -18,7 +18,10 @@ def write_array_to_file(file, array):
 
 # Use glob and a loop to process ALL text files in a path
 text_files = glob.glob("*.txt")
-text_files.remove("results.txt") # Don't process existing results file
+try:
+	text_files.remove("results.txt") # Don't process existing results file
+except ValueError:
+	pass
 
 file_results = open("results.txt", "w")
 for text_file in text_files:
