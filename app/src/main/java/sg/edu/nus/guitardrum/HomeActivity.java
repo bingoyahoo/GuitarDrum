@@ -1,22 +1,19 @@
 package sg.edu.nus.guitardrum;
 
-import android.content.Context;
 import android.content.Intent;
-import android.hardware.Sensor;
-import android.hardware.SensorEvent;
-import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.media.MediaPlayer;
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
-import android.widget.Toast;
 
-import java.util.Arrays;
+import static android.R.attr.button;
+import static android.R.attr.onClick;
 
 public class HomeActivity extends AppCompatActivity  {
 
@@ -26,8 +23,9 @@ public class HomeActivity extends AppCompatActivity  {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
 
-        final ImageButton guitarButton = (ImageButton)findViewById(R.id.imageButton_home_guitar);
-        final ImageButton drumButton = (ImageButton)findViewById(R.id.imageButton_home_drum);
+        final ImageButton          guitarButton   = (ImageButton)findViewById(R.id.imageButton_home_guitar);
+        final ImageButton          drumButton     = (ImageButton)findViewById(R.id.imageButton_home_drum);
+        final FloatingActionButton trainingButton = (FloatingActionButton)findViewById(R.id.training_button);
 
         final LinearLayout guitarView = (LinearLayout)findViewById(R.id.guitar_view);
         final LinearLayout drumView = (LinearLayout)findViewById(R.id.drum_view);
@@ -44,7 +42,14 @@ public class HomeActivity extends AppCompatActivity  {
             Image assets of guitar and drum: Dmitry Ryabov (https://www.behance.net/gallery/29912703/Low-Poly-Musical-Instruments)
             License: CC BY_NY 4.0 (https://creativecommons.org/licenses/by-nc/4.0/deed.en_US)
          */
+        trainingButton.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View v) {
+                Intent training_intent = new Intent(HomeActivity.this, TrainingActivity.class);
+                startActivity(training_intent);
+            }
 
+        });
 
         /*
             Guitar ImageButton click animation and sound
@@ -110,5 +115,15 @@ public class HomeActivity extends AppCompatActivity  {
                 return false;
             }
         });
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
     }
 }

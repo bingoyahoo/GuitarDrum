@@ -62,6 +62,7 @@ public class NewDrumActivity extends AppCompatActivity implements SensorEventLis
         bufferIndex = 0;
 
         featureExtractor = null;
+
         FloatingActionButton fab1 = (FloatingActionButton)findViewById(R.id.drum_button_1);
         FloatingActionButton fab2 = (FloatingActionButton)findViewById(R.id.drum_button_2);
         FloatingActionButton fab3 = (FloatingActionButton)findViewById(R.id.drum_button_3);

@@ -14,4 +14,6 @@
     <string name="drum_title">DRUM</string>
     <string name="guitar_title">GUITAR</string>
     <string name="train_classifier">Train Classifier</string>
+    <string name="instructions_training">This activity is for developers to retrain the SVM model if necessary. Upload a text file containing fs, labels and raw data from accelerometer. An text file for libsvm will be made.</string>
+    <string name="choose_file">Choose File</string>
 </resources>

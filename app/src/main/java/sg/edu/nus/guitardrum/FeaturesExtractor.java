@@ -1,5 +1,7 @@
 package sg.edu.nus.guitardrum;
 
+import java.util.ArrayList;
+
 import jAudioFeatureExtractor.Aggregators.Mean;
 import jAudioFeatureExtractor.AudioFeatures.Compactness;
 import jAudioFeatureExtractor.AudioFeatures.LPC;
@@ -9,6 +11,8 @@ import jAudioFeatureExtractor.AudioFeatures.RMS;
 import jAudioFeatureExtractor.AudioFeatures.SpectralCentroid;
 import jAudioFeatureExtractor.AudioFeatures.ZeroCrossings;
 import jAudioFeatureExtractor.jAudioTools.AudioSamples;
+
+import static hep.aida.bin.BinFunctions1D.rms;
 
 /**
  * 
@@ -58,36 +62,44 @@ public class FeaturesExtractor {
 	 * 	the feature extractor implementation for details).
 	 * @throws Exception
 	 */
-	public void calculateFeatuers() throws Exception {
+	public ArrayList<Double> calculateFeatuers() throws Exception {
+		ArrayList<Double> features_values = new ArrayList<Double>();
 		RMS rms = new RMS();
 		double[] result = rms.extractFeature(samples, sampling_rate, null);
 		System.out.println(result[0]);
+		features_values.add(result[0]);
 		
 		ZeroCrossings zc = new ZeroCrossings();
 		result = zc.extractFeature(samples, sampling_rate, null);
 		System.out.println(result[0]);
-		
+		features_values.add(result[0]);
+
 		LPC lpc = new LPC();
 		result = lpc.extractFeature(samples, sampling_rate, null);
 		System.out.println(result[0]);
-		
+		features_values.add(result[0]);
+
 		Compactness ct = new Compactness();
 		other_features = new double[1][];
 		other_features[0] = mag_spectrum;
 		result = ct.extractFeature(samples, sampling_rate, other_features);
 		System.out.println(result[0]);
+		features_values.add(result[0]);
 
 		SpectralCentroid sc = new SpectralCentroid();
 		other_features = new double[1][];
 		other_features[0] = power_spectrum;
 		result = sc.extractFeature(samples, sampling_rate, other_features);
 		System.out.println(result[0]);
+		features_values.add(result[0]);
 //
 //		MFCC mfcc = new MFCC();
 //		other_features = new double[1][];
 //		other_features[0] = mag_spectrum;
 //		result = mfcc.extractFeature(samples, sampling_rate, other_features);
 ////		System.out.println(result[0]);
+
+		return features_values;
 	}
 	
 	// calculate the aggregate value of multiple windowed samples
