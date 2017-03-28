@@ -22,6 +22,7 @@ public class Main extends Activity implements SensorEventListener {
     private Spinner spinner1;
 
     private long lastUpdate = 0;
+    private long startTime = 0;
     private long mShakeTimeStamp = 0;
     private float last_x, last_y, last_z;
     private static final int SHAKE_THRESHOLD = 1000;
@@ -31,6 +32,8 @@ public class Main extends Activity implements SensorEventListener {
     private ArrayList<Long> timestampList = new ArrayList<Long>();
     private String direction;
     private int fileCount = 0;
+    private double samplingRate = 0.0;
+    private boolean startRecording = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -74,6 +77,12 @@ public class Main extends Activity implements SensorEventListener {
 
                     if (speed > SHAKE_THRESHOLD) {
 
+                        if (startRecording == false) {
+
+                            startTime = System.currentTimeMillis();
+                            startRecording = true;
+                        }
+
                         setCoordinates(x, y, z);
                         long timeInMillis = (new Date()).getTime()
                                 + (event.timestamp - System.nanoTime()) / 1000000L;
@@ -86,10 +95,12 @@ public class Main extends Activity implements SensorEventListener {
 
                             FileStorage fs = new FileStorage();
                             StringBuilder sb = new StringBuilder();
-
+                            long now = System.currentTimeMillis();
+                            samplingRate = count / ((now - startTime) / 1000.0);
                             sb.append(direction);
                             sb.append(';');
-                            sb.append(SensorManager.SENSOR_DELAY_UI+"Hz");
+                            sb.append(String.format(
+                                    "%.2f", samplingRate)+"Hz");
                             sb.append(';');
                             for (int i = 0; i < list.size(); i++) {
                                 sb.append("{");
@@ -99,20 +110,25 @@ public class Main extends Activity implements SensorEventListener {
                             }
 
                             fs.storeData(direction, fileCount, sb.toString(), this);
+                            TextView coord_fileCount = (TextView)findViewById(R.id.textViewFileCount);
+                            coord_fileCount.setText(direction+String.valueOf(fileCount));
                             fileCount = fileCount + 1;
                         }
+
                         else if (count > 100){
                             count = 0;
+                            startRecording = false;
                             list.clear();
-
                         }
-                    }
+
+                    } // end of checking of SHAKE_THRESHOLD
+
                     last_x = x;
                     last_y = y;
                     last_z = z;
                 }
             }
-        }
+        } // end of checking if sensor is accelerometer
     }
 
     @Override
@@ -128,6 +144,7 @@ public class Main extends Activity implements SensorEventListener {
     }
     protected void onResume(){
         super.onResume();
+        senSensorManager.registerListener(this, senAccelerometer, SensorManager.SENSOR_DELAY_UI);
     }
 
     private void setCoordinates(float x, float y, float z){

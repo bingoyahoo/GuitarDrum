@@ -36,7 +36,7 @@ public class FileStorage {
         FileOutputStream fOut;
 
         try{
-            file = new File(Environment.getExternalStorageDirectory(), direction+"-"+fileCount+"-file.txt");
+            file = new File(Environment.getExternalStorageDirectory(), direction+fileCount+"-file.txt");
             fOut = new FileOutputStream(file);
 
             //ObjectOutputStream osw = new ObjectOutputStream(fOut);

@@ -55,4 +55,13 @@
         android:prompt="@string/axises_prompt"
         android:id="@+id/spinner" />
 
+    <TextView
+        android:text="File Produced"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/text_Count"
+        android:layout_alignStart="@+id/text_Count"
+        android:layout_marginTop="24dp"
+        android:id="@+id/textViewFileCount" />
+
 </RelativeLayout>
