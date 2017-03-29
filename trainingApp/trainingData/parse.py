@@ -6,6 +6,7 @@ author: Delvin Low
 import re
 import glob
 import matplotlib.pyplot as plt
+import os
 
 TO_PLOT = False
 
@@ -17,7 +18,9 @@ def write_array_to_file(file, array):
 	file.write(items)
 
 # Use glob and a loop to process ALL text files in a path
-text_files = glob.glob("*.txt")
+dir_path = os.path.dirname(os.path.realpath(__file__))
+text_files = glob.glob(dir_path + "/*/*.txt")
+# print text_files
 try:
 	text_files.remove("results.txt") # Don't process existing results file
 except ValueError:
@@ -25,7 +28,12 @@ except ValueError:
 
 file_results = open("results.txt", "w")
 for text_file in text_files:
-	label = text_file.split("-")[0] # Label for action
+	head, tail = os.path.split(text_file)
+	label = tail.split("-")[0] # Label for action
+	label = label[: -1] # remove last number
+	print label
+
+	# label = label[: -1]
 	# Open Data File and read in a single line 
 	with open (text_file, "r") as myfile:
 		data = myfile.read()
