@@ -19,6 +19,8 @@ import java.io.OutputStreamWriter;
 import java.util.ArrayList;
 import java.util.Arrays;
 
+import static android.text.TextUtils.concat;
+import static jAudioFeatureExtractor.ACE.XMLParsers.ParseBatchJobHandler.ATTRIBUTE;
 
 public class TrainingActivity extends AppCompatActivity {
 
@@ -27,14 +29,36 @@ public class TrainingActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_training);
 
-        final ArrayList<String> labels = new ArrayList<String>(Arrays.asList("front", "back", "up", "down", "left", "right", "nothing"));
+        final ArrayList<String> labels = new ArrayList<String>(Arrays.asList("front", "back", "up", "down", "left", "right", "standing"));
 
         final Button trainingButton = (Button)findViewById(R.id.button_choose_text_file);
         trainingButton.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v) {
 
-                String data= "";
+                String data = "";
+                String data_arff = "";
+                data_arff += "@RELATION physical_activity\n";
+                data_arff += "@ATTRIBUTE X_RMS NUMERIC\n";
+                data_arff += "@ATTRIBUTE X_ZC NUMERIC\n";
+                data_arff += "@ATTRIBUTE X_LPC NUMERIC\n";
+                data_arff += "@ATTRIBUTE X_CT NUMERIC\n";
+                data_arff += "@ATTRIBUTE X_SC NUMERIC\n";
+
+                data_arff += "@ATTRIBUTE Y_RMS NUMERIC\n";
+                data_arff += "@ATTRIBUTE Y_ZC NUMERIC\n";
+                data_arff += "@ATTRIBUTE Y_LPC NUMERIC\n";
+                data_arff += "@ATTRIBUTE Y_CT NUMERIC\n";
+                data_arff += "@ATTRIBUTE Y_SC NUMERIC\n";
+
+                data_arff += "@ATTRIBUTE Z_RMS NUMERIC\n";
+                data_arff += "@ATTRIBUTE Z_ZC NUMERIC\n";
+                data_arff += "@ATTRIBUTE Z_LPC NUMERIC\n";
+                data_arff += "@ATTRIBUTE Z_CT NUMERIC\n";
+                data_arff += "@ATTRIBUTE Z_SC NUMERIC\n";
+                data_arff += "@ATTRIBUTE class {back,down,front,left,right,up,standing}\n";
+                data_arff += "\n";
+                data_arff += "@DATA\n";
                 InputStream inputStream = TrainingActivity.this.getResources().openRawResource(R.raw.results);
 
                 BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream));
@@ -85,6 +109,11 @@ public class TrainingActivity extends AppCompatActivity {
                             features = fe.calculateFeatuers();
                             for (int j=1; j<= features.size(); j++){
                                 data = data.concat(String.valueOf(j + (xyz_counter * features.size()) + ":" + String.valueOf(features.get(j-1)) + " "));
+                                data_arff = data_arff.concat(String.valueOf(features.get(j-1)) + ",");
+
+                                if (j +(xyz_counter * features.size()) == 3 * features.size()){
+                                    data_arff = data_arff.concat(label+"\n");
+                                }
                             }
                             data = data.trim();
                             xyz_counter += 1;
@@ -99,15 +128,15 @@ public class TrainingActivity extends AppCompatActivity {
                 }
                 System.out.println(data);
 
-                writeToFile(data, TrainingActivity.this);
+                writeToFile(data, TrainingActivity.this, "training.txt");
+                writeToFile(data_arff, TrainingActivity.this, "training.arff");
             }
 
         });
     }
 
-    private void writeToFile(String data,Context context) {
+    private void writeToFile(String data,Context context, String outputfile) {
         try {
-            String outputfile = "training.txt";
             // Get the directory for the user's public Downloads directory.
             File file = new File(Environment.getExternalStoragePublicDirectory(
                     Environment.DIRECTORY_DOWNLOADS), outputfile);
