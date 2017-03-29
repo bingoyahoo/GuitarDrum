@@ -19,6 +19,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.skyfishjy.library.RippleBackground;
@@ -27,7 +28,9 @@ import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
 
 import weka.classifiers.Evaluation;
@@ -35,6 +38,7 @@ import weka.classifiers.trees.J48;
 import weka.core.Debug;
 import weka.core.Instances;
 
+import static android.R.attr.direction;
 import static android.R.id.list;
 
 /*
@@ -45,17 +49,6 @@ import static android.R.id.list;
 public class GuitarActivity extends AppCompatActivity implements SensorEventListener {
     /** Called when the activity is first created. */
     private static final String TAG = "Libsvm";
-
-//    // svm native
-//    private native int trainClassifierNative(String trainingFile, int kernelType,
-//                                             int cost, float gamma, int isProb, String modelFile);
-//    private native int doClassificationNative(float values[][], int indices[][],
-//                                              int isProb, String modelFile, int labels[], double probs[]);
-//
-//    static {
-//        System.loadLibrary("signal");
-//    }
-
 
     //variables for checking sampling rate
     private final static long sampling_interval = 10000000; //ns
@@ -68,15 +61,20 @@ public class GuitarActivity extends AppCompatActivity implements SensorEventList
     private boolean bufferisReady = false;
     private double[][] buffer;
     private double[][] nextBuffer;
-    private final static int bufferLen = 1024;
-    private final static int bufferOverlap = 512;
+    private final static int bufferLen = 100;
+    private final static int bufferOverlap = 1;
     //    private final static int bufferLen = 64;
 //    private final static int bufferOverlap = 32;
     private int bufferIndex;
 
     private SensorManager mSensorManager;
     private Sensor mAccelerometer;
-    private FeaturesExtractor featureExtractor;
+    private FeaturesExtractor featureExtractor_x;
+    private FeaturesExtractor featureExtractor_y;
+    private FeaturesExtractor featureExtractor_z;
+    private J48 tree;
+
+    final ArrayList<String> labels = new ArrayList<String>(Arrays.asList("front", "back", "up", "down", "left", "right", "standing"));
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -92,9 +90,39 @@ public class GuitarActivity extends AppCompatActivity implements SensorEventList
         nextBuffer = new double[3][bufferLen];
         bufferIndex = 0;
 
-        featureExtractor = null;
+        featureExtractor_x = null;
+        featureExtractor_y = null;
+        featureExtractor_z = null;
 
-        FloatingActionButton fab1 = (FloatingActionButton)findViewById(R.id.string_button_1);
+        BufferedReader reader = null;
+        try {
+            String trainingFileLoc = Environment.getExternalStorageDirectory()+"/Download/training.arff";
+            reader = new BufferedReader(new FileReader(trainingFileLoc));
+            Instances data = new Instances(reader);
+            reader.close();
+            data.setClassIndex(data.numAttributes() - 1);
+
+            String[] options = new String[1];
+            options[0] = "-U";            // unpruned tree
+            tree = new J48();         // new instance of tree
+            tree.setOptions(options);     // set the options
+            tree.buildClassifier(data);   // build classifier
+
+
+            Evaluation eval = new Evaluation(data);
+            eval.crossValidateModel(tree, data, 10, new Debug.Random(1));
+            System.out.println(eval.toSummaryString("\nResults\n======\n", false));
+            Toast.makeText(this, "Success Trained!", Toast.LENGTH_SHORT).show();
+
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (Exception e){
+
+        }
+
+            FloatingActionButton fab1 = (FloatingActionButton)findViewById(R.id.string_button_1);
         FloatingActionButton fab2 = (FloatingActionButton)findViewById(R.id.string_button_2);
         FloatingActionButton fab3 = (FloatingActionButton)findViewById(R.id.string_button_3);
         FloatingActionButton fab4 = (FloatingActionButton)findViewById(R.id.string_button_4);
@@ -193,11 +221,9 @@ public class GuitarActivity extends AppCompatActivity implements SensorEventList
         switch (index) {
             case 1:
                 rippleBackground=(RippleBackground)findViewById(R.id.ripple_bg_1);
-                train();
                 break;
             case 2:
                 rippleBackground=(RippleBackground)findViewById(R.id.ripple_bg_2);
-//                classify();
                 break;
             case 3:
                 rippleBackground=(RippleBackground)findViewById(R.id.ripple_bg_3);
@@ -230,6 +256,69 @@ public class GuitarActivity extends AppCompatActivity implements SensorEventList
     public void onAccuracyChanged(Sensor sensor, int accuracy) {
     }
 
+    private long lastUpdate = 0;
+    private static final int SHAKE_THRESHOLD = 1000;
+    private boolean startRecording = false;
+    private long startTime = 0;
+    private int count = 0;
+    private double samplingRate = 0.0;
+    private ArrayList<Long> timestampList = new ArrayList<Long>();
+    private ArrayList<String> list1 = new ArrayList<String>();
+//
+//    public void onSensorChanged(SensorEvent event) {
+//        Sensor mySensor = event.sensor;
+//        if (mySensor.getType() == Sensor.TYPE_ACCELEROMETER) {
+////            System.out.println("here");
+//                float x = event.values[0];
+//                float y = event.values[1];
+//                float z = event.values[2];
+//
+//                long curTime = System.currentTimeMillis();
+//
+//                if ((curTime - lastUpdate) > 100) {
+//                    long diffTime = (curTime - lastUpdate);
+//                    lastUpdate = curTime;
+//
+//                    double speed = Math.abs(x + y + z - last_x - last_y - last_z) / diffTime * 10000;
+//
+////                    if (speed > SHAKE_THRESHOLD) {
+//
+//                        if (startRecording == false) {
+//
+//                            startTime = System.currentTimeMillis();
+//                            startRecording = true;
+//                        }
+////                        setCoordinates(x, y, z);
+//                        buffer[0][count] = x;
+//                        buffer[1][count] = y;
+//                        buffer[2][count] = z;
+//                        long timeInMillis = (new Date()).getTime()
+//                                + (event.timestamp - System.nanoTime()) / 1000000L;
+//                        timestampList.add(timeInMillis);
+//                        float[] coords = {x, y, z};
+//                        //BigDecimal result;
+//                        //result = round(x,6);
+//                        list1.add(Arrays.toString(coords));
+//                        if (count == 99) {
+//                            long now = System.currentTimeMillis();
+//                            samplingRate = (count+1.0) / ((now - startTime) / 1000.0);
+//                            doSomeCalculations(buffer);
+//                            count = 0;
+//                            startRecording = false;
+//                            list1.clear();
+//                        }
+//                    count += 1;
+//
+//                    count = count % bufferLen;
+////                    } // end of checking of SHAKE_THRESHOLD
+//
+//                    last_x = x;
+//                    last_y = y;
+//                    last_z = z;
+//                }
+//        } // end of checking if sensor is accelerometer
+//    }
+
     public void onSensorChanged(SensorEvent event) {
         makeBuffer(event);
         if (bufferisReady) {
@@ -248,6 +337,8 @@ public class GuitarActivity extends AppCompatActivity implements SensorEventList
     private void makeBuffer(SensorEvent event){
         int sensor = event.sensor.getType();
         float[] values = event.values;
+
+
 
         if(sensor == Sensor.TYPE_ACCELEROMETER) {
             if(lastTimeStamp == 0){
@@ -280,15 +371,23 @@ public class GuitarActivity extends AppCompatActivity implements SensorEventList
     }
 
     private void doSomeCalculations(double[][] buffer){
+        List<Double> combined_features = new ArrayList<Double>();
         try {
             Log.v("Buffer is ", Arrays.toString(buffer[0]));
-            featureExtractor = new FeaturesExtractor(buffer[0], 100);
+            featureExtractor_x = new FeaturesExtractor(buffer[0], samplingRate);
+            featureExtractor_y = new FeaturesExtractor(buffer[1], samplingRate);
+            featureExtractor_z = new FeaturesExtractor(buffer[2], samplingRate);
         } catch (Exception e) {
             Toast.makeText(this, "FeaturesExtractor cannot launch", Toast.LENGTH_SHORT).show();
         }
 
         try {
-            featureExtractor.calculateFeatuers();
+            combined_features.clear();
+            combined_features.addAll(featureExtractor_x.calculateFeatuers());
+            combined_features.addAll(featureExtractor_y.calculateFeatuers());
+            combined_features.addAll(featureExtractor_z.calculateFeatuers());
+            System.out.println(Arrays.toString(combined_features.toArray()));
+            classify(combined_features);
 //            d.calculateFeatuersMean();
         } catch (Exception e) {
             Toast.makeText(this, "Features problem", Toast.LENGTH_SHORT).show();
@@ -298,7 +397,7 @@ public class GuitarActivity extends AppCompatActivity implements SensorEventList
     @Override
     protected void onResume() {
         super.onResume();
-        mSensorManager.registerListener(this, mAccelerometer, SensorManager.SENSOR_DELAY_FASTEST);
+        mSensorManager.registerListener(this, mAccelerometer, SensorManager.SENSOR_DELAY_UI);
     }
 
     @Override
@@ -307,51 +406,27 @@ public class GuitarActivity extends AppCompatActivity implements SensorEventList
         mSensorManager.unregisterListener(this);
     }
 
-    private void train(){
-        BufferedReader reader = null;
-        try {
-            String trainingFileLoc = Environment.getExternalStorageDirectory()+"/Download/training.arff";
-            reader = new BufferedReader(new FileReader(trainingFileLoc));
-            Instances data = new Instances(reader);
-            reader.close();
-            data.setClassIndex(data.numAttributes() - 1);
+    private void classify(List<Double> list){
 
-            String[] options = new String[1];
-            options[0] = "-U";            // unpruned tree
-            J48 tree = new J48();         // new instance of tree
-            tree.setOptions(options);     // set the options
-            tree.buildClassifier(data);   // build classifier
+//
+//            Double[] doubleArray = {7.455246499373751,60.0,0.29087540648495147,370.59837721885856,
+//                    39.150463030765216,12.734256465601685,60.0,0.18091646650363757,385.34431007080315,
+//                    31.89150908203104, 5.351423635325828,53.0,0.0017771684478375433,319.40381718791707,
+//                    31.948380719894285}; //up. Expected: 5.0
+////            Double[] doubleArray = {4.600646720617296,36.0,-0.12234045583418018,292.38929804443194,
+////                    24.408694383140627,7.724959309821786,0.0,-0.8577749609120245,475.6558379766474,
+////                    2.8731960701758026,14.837271391181428,66.0,0.5127651790434414,348.79690502685065,
+////                    43.45089525554437}; // back. Expected: 0.0
+//            List<Double> list = Arrays.asList(doubleArray);
 
 
-            Double[] doubleArray = {7.455246499373751,60.0,0.29087540648495147,370.59837721885856,
-                    39.150463030765216,12.734256465601685,60.0,0.18091646650363757,385.34431007080315,
-                    31.89150908203104, 5.351423635325828,53.0,0.0017771684478375433,319.40381718791707,
-                    31.948380719894285}; //up. Expected: 5.0
-//            Double[] doubleArray = {4.600646720617296,36.0,-0.12234045583418018,292.38929804443194,
-//                    24.408694383140627,7.724959309821786,0.0,-0.8577749609120245,475.6558379766474,
-//                    2.8731960701758026,14.837271391181428,66.0,0.5127651790434414,348.79690502685065,
-//                    43.45089525554437}; // back. Expected: 0.0
-            List<Double> list = Arrays.asList(doubleArray);
-
-
-            Evaluation eval = new Evaluation(data);
-            eval.crossValidateModel(tree, data, 10, new Debug.Random(1));
-            System.out.println(eval.toSummaryString("\nResults\n======\n", false));
-
-            Toast.makeText(this, "Success Trained!", Toast.LENGTH_SHORT).show();
 
             ActionClassifier ac = new ActionClassifier();
             double result = ac.classify(tree, list);
             System.out.println("CLASSIFICATION: " + String.valueOf(result));
-            Toast.makeText(this, "Class is " + String.valueOf(result), Toast.LENGTH_SHORT).show();
+            int x = (int) result;
+            Toast.makeText(this, "Class is " + labels.get(x), Toast.LENGTH_SHORT).show();
 
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (Exception e){
-
-        }
         // setting class attribute
     }
 //

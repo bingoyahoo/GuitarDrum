@@ -10,18 +10,23 @@
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".HomeActivity">
+        <activity android:name=".HomeActivity"
+                  android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
 
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
-        <activity android:name=".ClassificationActivity">
+        <activity android:name=".ClassificationActivity"
+                  android:screenOrientation="portrait">
         </activity>
-        <activity android:name=".GuitarActivity"/>
-        <activity android:name=".NewDrumActivity"/>
-        <activity android:name=".TrainingActivity">
+        <activity android:name=".GuitarActivity"
+                  android:screenOrientation="portrait"/>
+        <activity android:name=".NewDrumActivity"
+                  android:screenOrientation="portrait"/>
+        <activity android:name=".TrainingActivity"
+                  android:screenOrientation="portrait">
         </activity>
     </application>
 
