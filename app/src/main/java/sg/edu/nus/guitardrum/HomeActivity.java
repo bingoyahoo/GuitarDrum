@@ -1,19 +1,15 @@
 package sg.edu.nus.guitardrum;
 
+import android.app.Activity;
 import android.content.Intent;
-import android.hardware.SensorManager;
 import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.view.MotionEvent;
 import android.view.View;
-import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
-
-import static android.R.attr.button;
-import static android.R.attr.onClick;
 
 public class HomeActivity extends AppCompatActivity  {
 
@@ -45,7 +41,7 @@ public class HomeActivity extends AppCompatActivity  {
         trainingButton.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v) {
-                Intent training_intent = new Intent(HomeActivity.this, TrainingActivity.class);
+                Intent training_intent = new Intent(HomeActivity.this, ClassificationActivity.class);
                 startActivity(training_intent);
             }
 

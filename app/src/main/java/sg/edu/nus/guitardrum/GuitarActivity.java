@@ -10,19 +10,32 @@ import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
+import android.os.Bundle;
+import android.os.Environment;
 import android.os.Handler;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
 
-import com.skyfishjy.library.*;
+import com.skyfishjy.library.RippleBackground;
 
+import java.io.BufferedReader;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
 import java.util.Arrays;
+import java.util.List;
+
+import weka.classifiers.Evaluation;
+import weka.classifiers.trees.J48;
+import weka.core.Debug;
+import weka.core.Instances;
+
+import static android.R.id.list;
 
 /*
             Make sure to Sync Project With Gradle Files (Tools -> Android -> Sync Project With Gradle Files) and rebuild the app
@@ -30,6 +43,18 @@ import java.util.Arrays;
 */
 
 public class GuitarActivity extends AppCompatActivity implements SensorEventListener {
+    /** Called when the activity is first created. */
+    private static final String TAG = "Libsvm";
+
+//    // svm native
+//    private native int trainClassifierNative(String trainingFile, int kernelType,
+//                                             int cost, float gamma, int isProb, String modelFile);
+//    private native int doClassificationNative(float values[][], int indices[][],
+//                                              int isProb, String modelFile, int labels[], double probs[]);
+//
+//    static {
+//        System.loadLibrary("signal");
+//    }
 
 
     //variables for checking sampling rate
@@ -168,9 +193,11 @@ public class GuitarActivity extends AppCompatActivity implements SensorEventList
         switch (index) {
             case 1:
                 rippleBackground=(RippleBackground)findViewById(R.id.ripple_bg_1);
+                train();
                 break;
             case 2:
                 rippleBackground=(RippleBackground)findViewById(R.id.ripple_bg_2);
+//                classify();
                 break;
             case 3:
                 rippleBackground=(RippleBackground)findViewById(R.id.ripple_bg_3);
@@ -279,4 +306,168 @@ public class GuitarActivity extends AppCompatActivity implements SensorEventList
         super.onPause();
         mSensorManager.unregisterListener(this);
     }
+
+    private void train(){
+        BufferedReader reader = null;
+        try {
+            String trainingFileLoc = Environment.getExternalStorageDirectory()+"/Download/training.arff";
+            reader = new BufferedReader(new FileReader(trainingFileLoc));
+            Instances data = new Instances(reader);
+            reader.close();
+            data.setClassIndex(data.numAttributes() - 1);
+
+            String[] options = new String[1];
+            options[0] = "-U";            // unpruned tree
+            J48 tree = new J48();         // new instance of tree
+            tree.setOptions(options);     // set the options
+            tree.buildClassifier(data);   // build classifier
+
+
+            Double[] doubleArray = {7.455246499373751,60.0,0.29087540648495147,370.59837721885856,
+                    39.150463030765216,12.734256465601685,60.0,0.18091646650363757,385.34431007080315,
+                    31.89150908203104, 5.351423635325828,53.0,0.0017771684478375433,319.40381718791707,
+                    31.948380719894285}; //up. Expected: 5.0
+//            Double[] doubleArray = {4.600646720617296,36.0,-0.12234045583418018,292.38929804443194,
+//                    24.408694383140627,7.724959309821786,0.0,-0.8577749609120245,475.6558379766474,
+//                    2.8731960701758026,14.837271391181428,66.0,0.5127651790434414,348.79690502685065,
+//                    43.45089525554437}; // back. Expected: 0.0
+            List<Double> list = Arrays.asList(doubleArray);
+
+
+            Evaluation eval = new Evaluation(data);
+            eval.crossValidateModel(tree, data, 10, new Debug.Random(1));
+            System.out.println(eval.toSummaryString("\nResults\n======\n", false));
+
+            Toast.makeText(this, "Success Trained!", Toast.LENGTH_SHORT).show();
+
+            ActionClassifier ac = new ActionClassifier();
+            double result = ac.classify(tree, list);
+            System.out.println("CLASSIFICATION: " + String.valueOf(result));
+            Toast.makeText(this, "Class is " + String.valueOf(result), Toast.LENGTH_SHORT).show();
+
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (Exception e){
+
+        }
+        // setting class attribute
+    }
+//
+//    private void train() {
+//        // Svm training
+//        int kernelType = 2; // Radial basis function
+//        int cost = 4; // Cost
+//        int isProb = 0;
+//        float gamma = 0.25f; // Gamma
+//        String trainingFileLoc = Environment.getExternalStorageDirectory()+"/Download/training_set";
+//        String modelFileLoc = Environment.getExternalStorageDirectory()+"/model";
+//        if (trainClassifierNative(trainingFileLoc, kernelType, cost, gamma, isProb,
+//                modelFileLoc) == -1) {
+//            Log.d(TAG, "training err");
+//            finish();
+//        }
+//        Toast.makeText(this, "Training is done", 2000).show();
+//    }
+//
+//    /**
+//     * classify generate labels for features.
+//     * Return:
+//     * 	-1: Error
+//     * 	0: Correct
+//     */
+//    public int callSVM(float values[][], int indices[][], int groundTruth[], int isProb, String modelFile,
+//                       int labels[], double probs[]) {
+//        // SVM type
+//        final int C_SVC = 0;
+//        final int NU_SVC = 1;
+//        final int ONE_CLASS_SVM = 2;
+//        final int EPSILON_SVR = 3;
+//        final int NU_SVR = 4;
+//
+//        // For accuracy calculation
+//        int correct = 0;
+//        int total = 0;
+//        float error = 0;
+//        float sump = 0, sumt = 0, sumpp = 0, sumtt = 0, sumpt = 0;
+//        float MSE, SCC, accuracy;
+//
+//        int num = values.length;
+////    	int svm_type = C_SVC;
+//        int svm_type = NU_SVC;
+//        if (num != indices.length)
+//            return -1;
+//        // If isProb is true, you need to pass in a real double array for probability array
+//        int r = doClassificationNative(values, indices, isProb, modelFile, labels, probs);
+//
+//        // Calculate accuracy
+//        if (groundTruth != null) {
+//            if (groundTruth.length != indices.length) {
+//                return -1;
+//            }
+//            for (int i = 0; i < num; i++) {
+//                int predict_label = labels[i];
+//                int target_label = groundTruth[i];
+//                if(predict_label == target_label)
+//                    ++correct;
+//                error += (predict_label-target_label)*(predict_label-target_label);
+//                sump += predict_label;
+//                sumt += target_label;
+//                sumpp += predict_label*predict_label;
+//                sumtt += target_label*target_label;
+//                sumpt += predict_label*target_label;
+//                ++total;
+//            }
+//
+//            if (svm_type==NU_SVR || svm_type==EPSILON_SVR)
+//            {
+//                MSE = error/total; // Mean square error
+//                SCC = ((total*sumpt-sump*sumt)*(total*sumpt-sump*sumt)) / ((total*sumpp-sump*sump)*(total*sumtt-sumt*sumt)); // Squared correlation coefficient
+//            }
+//            accuracy = (float)correct/total*100;
+//            Log.d(TAG, "Classification accuracy is " + accuracy);
+//        }
+//
+//        return r;
+//    }
+//
+//    private void classify() {
+//        // Svm classification
+//        float[][] values = {
+//                {-0.0237059f ,0.0345867f ,0.697105f ,-0.694704f ,-0.45f ,-1f ,-0.208179f ,-1f ,-1f }
+//                ,{-0.581207f ,-0.359398f ,0.567929f ,0.140187f ,0.0178582f ,-0.777778f ,-0.527881f ,-1f ,-1f }
+//                ,{-0.517123f ,-0.275188f ,0.536748f ,-0.0841122f ,-0.0464275f ,-0.806763f ,-0.451673f ,-1f ,-0.333333f }
+//                ,{-0.118519f ,-0.326316f ,-0.853007f ,-0.239875f ,0.278571f ,-0.958132f ,0.0855019f ,-1f ,0.0980392f }
+//                ,{-0.35294f  ,0.0105266f ,-0.0244988f ,-0.146417f ,0.0214277f ,-1f ,-0.276952f ,-1f ,-1f }
+//                ,{0.0974609f ,0.521805f ,-0.184855f ,-0.364486f ,-0.778571f ,-0.900161f ,-0.408922f ,0.0666666f ,-1f }
+//
+//        };
+//        int[][] indices = {
+//                {1,2,3,4,5,6,7,8,9}
+//                ,{1,2,3,4,5,6,7,8,9}
+//                ,{1,2,3,4,5,6,7,8,9}
+//                ,{1,2,3,4,5,6,7,8,9}
+//                ,{1,2,3,4,5,6,7,8,9}
+//                ,{1,2,3,4,5,6,7,8,9}
+//        };
+//        int[] groundTruth = {1, 2, 3, 5, 6, 7};
+//
+//        int[] labels = new int[6];
+//        double[] probs = new double[6];
+//        int isProb = 0; // Wheter is probability prediction
+//        String modelFileLoc = Environment.getExternalStorageDirectory()+"/model";
+//
+//        if (callSVM(values, indices, groundTruth, isProb, modelFileLoc, labels, probs) != 0) {
+//            Log.d(TAG, "Classification is incorrect");
+//        }
+//        else {
+//            String m = "";
+//            for (int l : labels)
+//                m += l + ", ";
+//            Toast.makeText(this, "Classification is done, the result is " + m, Toast.LENGTH_SHORT).show();
+//        }
+//    }
+
+
 }
