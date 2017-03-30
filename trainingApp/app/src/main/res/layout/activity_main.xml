@@ -13,11 +13,11 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Select direction below"
+        android:text="X Coordinate"
         android:id="@+id/text_X" />
 
     <TextView
-        android:text="Y Coordinates"
+        android:text="Y Coordinate"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@+id/text_X"
@@ -27,7 +27,7 @@
         android:layout_alignParentStart="true" />
 
     <TextView
-        android:text="Z Coordinates"
+        android:text="Z Coordinate"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@+id/text_Y"

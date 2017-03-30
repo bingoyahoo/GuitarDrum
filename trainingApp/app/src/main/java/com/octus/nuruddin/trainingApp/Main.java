@@ -23,10 +23,10 @@ public class Main extends Activity implements SensorEventListener {
 
     private long lastUpdate = 0;
     private long startTime = 0;
-    private long mShakeTimeStamp = 0;
-    private float last_x, last_y, last_z;
-    private static final int SHAKE_THRESHOLD = 1000;
-    private static final int SHAKE_COUNT_TIME = 2000;
+    //private long mShakeTimeStamp = 0;
+    //private float last_x, last_y, last_z;
+    //private static final int SHAKE_THRESHOLD = 1000;
+    //private static final int SHAKE_COUNT_TIME = 2000;
     private int count = 0;
     private ArrayList<String> list = new ArrayList<String>();
     private ArrayList<Long> timestampList = new ArrayList<Long>();
@@ -42,7 +42,7 @@ public class Main extends Activity implements SensorEventListener {
 
         senSensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
         senAccelerometer = senSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
-        senSensorManager.registerListener(this, senAccelerometer, SensorManager.SENSOR_DELAY_UI);
+        senSensorManager.registerListener(this, senAccelerometer, SensorManager.SENSOR_DELAY_GAME);
         addListenerOnSpinnerItemSelection();
         spinner1 = (Spinner) findViewById(R.id.spinner);
 
@@ -57,8 +57,6 @@ public class Main extends Activity implements SensorEventListener {
     public void onSensorChanged(SensorEvent event) {
         Sensor mySensor = event.sensor;
 
-
-
         if (mySensor.getType() == Sensor.TYPE_ACCELEROMETER) {
             if (!spinner1.getSelectedItem().toString().equals("--Select--")) {
                 direction = spinner1.getSelectedItem().toString();
@@ -70,12 +68,12 @@ public class Main extends Activity implements SensorEventListener {
                 long curTime = System.currentTimeMillis();
 
                 if ((curTime - lastUpdate) > 100) {
-                    long diffTime = (curTime - lastUpdate);
+                    //long diffTime = (curTime - lastUpdate);
                     lastUpdate = curTime;
 
-                    float speed = Math.abs(x + y + z - last_x - last_y - last_z) / diffTime * 10000;
+                    //float speed = Math.abs(x + y + z - last_x - last_y - last_z) / diffTime * 10000;
 
-                    if (speed > SHAKE_THRESHOLD) {
+                    //if (speed > SHAKE_THRESHOLD) {
 
                         if (startRecording == false) {
 
@@ -121,11 +119,11 @@ public class Main extends Activity implements SensorEventListener {
                             list.clear();
                         }
 
-                    } // end of checking of SHAKE_THRESHOLD
+                    //} // end of checking of SHAKE_THRESHOLD
 
-                    last_x = x;
-                    last_y = y;
-                    last_z = z;
+                    //last_x = x;
+                    //last_y = y;
+                    //last_z = z;
                 }
             }
         } // end of checking if sensor is accelerometer

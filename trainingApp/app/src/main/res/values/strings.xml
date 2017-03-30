@@ -4,6 +4,7 @@
     <string-array name="axises">
 
         <item>--Select--</item>
+        <item>*Standing*</item>
         <item>Left</item>
         <item>Right</item>
         <item>Up</item>
