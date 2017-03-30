@@ -38,7 +38,9 @@ import weka.classifiers.trees.J48;
 import weka.core.Debug;
 import weka.core.Instances;
 
+import static android.R.attr.action;
 import static android.R.attr.direction;
+import static android.R.attr.label;
 import static android.R.id.list;
 
 /*
@@ -452,7 +454,7 @@ public class GuitarActivity extends AppCompatActivity implements SensorEventList
     }
 
     private void classify(List<Double> list){
-
+        // Call machine learning to classify new buffer features
 //
 //            Double[] doubleArray = {7.455246499373751,60.0,0.29087540648495147,370.59837721885856,
 //                    39.150463030765216,12.734256465601685,60.0,0.18091646650363757,385.34431007080315,
@@ -468,8 +470,31 @@ public class GuitarActivity extends AppCompatActivity implements SensorEventList
             double result = ac.classify(tree, list);
             System.out.println("CLASSIFICATION: " + String.valueOf(result));
             int x = (int) result;
-            Toast.makeText(this, "Class is " + labels.get(x), Toast.LENGTH_SHORT).show();
+            String action_label = labels.get(x);
+            Toast.makeText(this, "Class is " + action_label, Toast.LENGTH_SHORT).show();
 
+            // Modulate the sound based on result
+            modulateSoundBasedOnAction(action_label);
+
+    }
+    public void modulateSoundBasedOnAction(String action_label){
+        if (action_label.equalsIgnoreCase("front")){
+            synthesizer_E.makeFaster();
+        } else if (action_label.equalsIgnoreCase("back")){
+            synthesizer_E.makeSlower();
+        } else if (action_label.equalsIgnoreCase("left")) {
+            synthesizer_E.makePrevious();
+        } else if (action_label.equalsIgnoreCase("right")) {
+            synthesizer_E.makeNext();
+        } else if (action_label.equalsIgnoreCase("up")) {
+            //increase volume
+            synthesizer_E.makeLouder();
+        } else if (action_label.equalsIgnoreCase("down")) {
+            // decrease volume
+            synthesizer_E.makeSofter();
+        } else{
+            // Do nothing
+        }
     }
 
 
