@@ -387,24 +387,26 @@ public class GuitarActivity extends AppCompatActivity implements SensorEventList
             }
             else {
                 long timeInterval = event.timestamp - lastTimeStamp;
-                buffer[0][bufferIndex] = values[0];
-                buffer[1][bufferIndex] = values[1];
-                buffer[2][bufferIndex] = values[2];
-                last_x = values[0];
-                last_y = values[1];
-                last_z = values[2];
-                lastTimeStamp = event.timestamp;
-                bufferIndex += 1;
-                //buffer is full
-                if(bufferIndex == bufferLen){
-                    bufferisReady = true;
-                    //copy values into new buffer
-                    for(int i = 0; i < bufferOverlap; i++){
-                        for(int j=0; j<3; j++){
-                            nextBuffer[j][i] = buffer[j][i + bufferOverlap];
+                if (timeInterval > 100) {
+                    buffer[0][bufferIndex] = values[0];
+                    buffer[1][bufferIndex] = values[1];
+                    buffer[2][bufferIndex] = values[2];
+                    last_x = values[0];
+                    last_y = values[1];
+                    last_z = values[2];
+                    lastTimeStamp = event.timestamp;
+                    bufferIndex += 1;
+                    //buffer is full
+                    if (bufferIndex == bufferLen) {
+                        bufferisReady = true;
+                        //copy values into new buffer
+                        for (int i = 0; i < bufferOverlap; i++) {
+                            for (int j = 0; j < 3; j++) {
+                                nextBuffer[j][i] = buffer[j][i + bufferOverlap];
+                            }
                         }
+                        bufferIndex = bufferOverlap;
                     }
-                    bufferIndex = bufferOverlap;
                 }
 
             }

@@ -41,7 +41,7 @@ public class HomeActivity extends AppCompatActivity  {
         trainingButton.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v) {
-                Intent training_intent = new Intent(HomeActivity.this, ClassificationActivity.class);
+                Intent training_intent = new Intent(HomeActivity.this, TrainingActivity.class);
                 startActivity(training_intent);
             }
 
