@@ -64,7 +64,7 @@ public class GuitarActivity extends AppCompatActivity implements SensorEventList
     private double[][] buffer;
     private double[][] nextBuffer;
     private final static int bufferLen = 100;
-    private final static int bufferOverlap = 1;
+    private final static int bufferOverlap = 50;
     //    private final static int bufferLen = 64;
 //    private final static int bufferOverlap = 32;
     private int bufferIndex;
