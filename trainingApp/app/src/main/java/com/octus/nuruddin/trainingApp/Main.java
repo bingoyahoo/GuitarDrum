@@ -1,12 +1,17 @@
 package com.octus.nuruddin.trainingApp;
 
+import android.Manifest;
 import android.app.Activity;
 import android.content.Context;
+import android.content.pm.PackageManager;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.os.Bundle;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
+import android.support.v7.app.AppCompatActivity;
 import android.widget.Spinner;
 import android.widget.TextView;
 
@@ -34,6 +39,7 @@ public class Main extends Activity implements SensorEventListener {
     private int fileCount = 0;
     private double samplingRate = 0.0;
     private boolean startRecording = false;
+    private int STORAGE_PERMISSION_CODE = 23;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,6 +51,16 @@ public class Main extends Activity implements SensorEventListener {
         senSensorManager.registerListener(this, senAccelerometer, SensorManager.SENSOR_DELAY_GAME);
         addListenerOnSpinnerItemSelection();
         spinner1 = (Spinner) findViewById(R.id.spinner);
+
+        if (ContextCompat.checkSelfPermission(this,
+                Manifest.permission.WRITE_EXTERNAL_STORAGE)
+                != PackageManager.PERMISSION_GRANTED) {
+
+            ActivityCompat.requestPermissions(Main.this,
+                    new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
+                    STORAGE_PERMISSION_CODE);
+
+        }
 
     }
     public void addListenerOnSpinnerItemSelection() {
