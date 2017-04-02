@@ -1,6 +1,5 @@
 package sg.edu.nus.guitardrum;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.media.MediaPlayer;
 import android.os.Bundle;
@@ -41,7 +40,7 @@ public class HomeActivity extends AppCompatActivity  {
         trainingButton.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v) {
-                Intent training_intent = new Intent(HomeActivity.this, ClassificationActivity.class);
+                Intent training_intent = new Intent(HomeActivity.this, TrainingActivity.class);
                 startActivity(training_intent);
             }
 

@@ -78,6 +78,18 @@
         app:rb_rippleAmount="1"
         app:rb_duration="1500"
         app:rb_scale="8">
+
+        <TextView
+            android:text="TextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_alignRight="@+id/frameLayout7"
+            android:layout_alignEnd="@+id/frameLayout7"
+            android:layout_marginRight="17dp"
+            android:layout_marginEnd="17dp"
+            android:layout_marginBottom="19dp"
+            android:id="@+id/textView5"/>
     </com.skyfishjy.library.RippleBackground>
 
         <FrameLayout

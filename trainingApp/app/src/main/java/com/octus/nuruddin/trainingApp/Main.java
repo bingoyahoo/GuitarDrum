@@ -11,7 +11,6 @@ import android.hardware.SensorManager;
 import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
-import android.support.v7.app.AppCompatActivity;
 import android.widget.Spinner;
 import android.widget.TextView;
 
@@ -83,7 +82,7 @@ public class Main extends Activity implements SensorEventListener {
 
                 long curTime = System.currentTimeMillis();
 
-                if ((curTime - lastUpdate) > 100) {
+                if ((curTime - lastUpdate) > 5) {
                     //long diffTime = (curTime - lastUpdate);
                     lastUpdate = curTime;
 
@@ -127,9 +126,10 @@ public class Main extends Activity implements SensorEventListener {
                             TextView coord_fileCount = (TextView)findViewById(R.id.textViewFileCount);
                             coord_fileCount.setText(direction+String.valueOf(fileCount));
                             fileCount = fileCount + 1;
-                        }
 
-                        else if (count > 100){
+                            spinner1.setSelection(0);
+                            spinner1.setEnabled(true);
+
                             count = 0;
                             startRecording = false;
                             list.clear();
