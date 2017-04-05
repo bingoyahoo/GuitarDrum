@@ -479,9 +479,9 @@ public class GuitarActivity extends AppCompatActivity implements SensorEventList
     }
     public void modulateSoundBasedOnAction(String action_label){
         if (action_label.equalsIgnoreCase("front")){
-            synthesizer_E.makeFaster();
+            synthesizer_E.longPlay();
         } else if (action_label.equalsIgnoreCase("back")){
-            synthesizer_E.makeSlower();
+            synthesizer_E.shortPlay();
         } else if (action_label.equalsIgnoreCase("left")) {
             synthesizer_E.makePrevious();
         } else if (action_label.equalsIgnoreCase("right")) {
