@@ -12,31 +12,22 @@ import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.RelativeLayout;
 import android.widget.Button;
+import android.widget.RelativeLayout;
 
-import com.skyfishjy.library.*;
+import com.skyfishjy.library.RippleBackground;
 
-/*
-            Make sure to Sync Project With Gradle Files (Tools -> Android -> Sync Project With Gradle Files) and rebuild the app
-            for usage of RippleBackground refer to: https://github.com/skyfishjy/android-ripple-background
-*/
-
-public class GuitarActivity extends AppCompatActivity {
+public class ChordActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_guitar);
+        setContentView(R.layout.activity_chord);
 
-        FloatingActionButton fab1 = (FloatingActionButton)findViewById(R.id.string_button_1);
-        FloatingActionButton fab2 = (FloatingActionButton)findViewById(R.id.string_button_2);
-        FloatingActionButton fab3 = (FloatingActionButton)findViewById(R.id.string_button_3);
-        FloatingActionButton fab4 = (FloatingActionButton)findViewById(R.id.string_button_4);
-        FloatingActionButton fab5 = (FloatingActionButton)findViewById(R.id.string_button_5);
-        FloatingActionButton fab6 = (FloatingActionButton)findViewById(R.id.string_button_6);
-        FloatingActionButton fab7 = (FloatingActionButton)findViewById(R.id.string_button_7);
-        FloatingActionButton fab8 = (FloatingActionButton)findViewById(R.id.string_button_8);
+        FloatingActionButton fab1 = (FloatingActionButton)findViewById(R.id.chord_button_1);
+        FloatingActionButton fab2 = (FloatingActionButton)findViewById(R.id.chord_button_2);
+        FloatingActionButton fab3 = (FloatingActionButton)findViewById(R.id.chord_button_3);
+        FloatingActionButton fab4 = (FloatingActionButton)findViewById(R.id.chord_button_4);
 
         fab1.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -62,49 +53,24 @@ public class GuitarActivity extends AppCompatActivity {
                 startAllAnimation(4);
             }
         });
-        fab5.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                startAllAnimation(5);
-            }
-        });
-        fab6.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                startAllAnimation(6);
-            }
-        });
-        fab7.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                startAllAnimation(7);
-            }
-        });
-        fab8.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                startAllAnimation(8);
-            }
-        });
 
-        final Button goToChordBtn = (Button)findViewById(R.id.go_to_chord);
-        goToChordBtn.setOnClickListener(new View.OnClickListener(){
+        final Button goToNoteBtn = (Button)findViewById(R.id.go_to_note);
+        goToNoteBtn.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View view){
-                startActivity(new Intent(GuitarActivity.this, ChordActivity.class));
+                startActivity(new Intent(ChordActivity.this, GuitarActivity.class));
             }
         });
-
     }
 
     public void startAllAnimation(int index) {
-        final RelativeLayout relativeLayout = (RelativeLayout)findViewById(R.id.activity_guitar);
+        final RelativeLayout relativeLayout = (RelativeLayout)findViewById(R.id.activity_chord);
         startRippleAnimation(index);
         startColorTransition(index);
     }
 
     private void startColorTransition(int index) {
-        final RelativeLayout relativeLayout = (RelativeLayout)findViewById(R.id.activity_guitar);
+        final RelativeLayout relativeLayout = (RelativeLayout)findViewById(R.id.activity_chord);
 
         int color = Color.TRANSPARENT;
         Drawable background = relativeLayout.getBackground();
@@ -123,18 +89,6 @@ public class GuitarActivity extends AppCompatActivity {
                 break;
             case 4:
                 colorEnd =  ContextCompat.getColor(getApplicationContext(), R.color.colorGuitarButton4);
-                break;
-            case 5:
-                colorEnd =  ContextCompat.getColor(getApplicationContext(), R.color.colorGuitarButton5);
-                break;
-            case 6:
-                colorEnd =  ContextCompat.getColor(getApplicationContext(), R.color.colorGuitarButton6);
-                break;
-            case 7:
-                colorEnd =  ContextCompat.getColor(getApplicationContext(), R.color.colorGuitarButton7);
-                break;
-            case 8:
-                colorEnd =  ContextCompat.getColor(getApplicationContext(), R.color.colorGuitarButton8);
                 break;
         }
 
@@ -156,28 +110,16 @@ public class GuitarActivity extends AppCompatActivity {
         final RippleBackground rippleBackground;
         switch (index) {
             case 1:
-                rippleBackground=(RippleBackground)findViewById(R.id.ripple_bg_1);
+                rippleBackground=(RippleBackground)findViewById(R.id.chord_ripple_bg_1);
                 break;
             case 2:
-                rippleBackground=(RippleBackground)findViewById(R.id.ripple_bg_2);
+                rippleBackground=(RippleBackground)findViewById(R.id.chord_ripple_bg_2);
                 break;
             case 3:
-                rippleBackground=(RippleBackground)findViewById(R.id.ripple_bg_3);
+                rippleBackground=(RippleBackground)findViewById(R.id.chord_ripple_bg_3);
                 break;
             case 4:
-                rippleBackground=(RippleBackground)findViewById(R.id.ripple_bg_4);
-                break;
-            case 5:
-                rippleBackground=(RippleBackground)findViewById(R.id.ripple_bg_5);
-                break;
-            case 6:
-                rippleBackground=(RippleBackground)findViewById(R.id.ripple_bg_6);
-                break;
-            case 7:
-                rippleBackground=(RippleBackground)findViewById(R.id.ripple_bg_7);
-                break;
-            case 8:
-                rippleBackground=(RippleBackground)findViewById(R.id.ripple_bg_8);
+                rippleBackground=(RippleBackground)findViewById(R.id.chord_ripple_bg_4);
                 break;
             default:
                 rippleBackground=(RippleBackground)findViewById(R.id.ripple_bg_1);

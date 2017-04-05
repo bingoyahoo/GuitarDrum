@@ -13,4 +13,6 @@
     <string name="toggle_instruments">Toggle Instruments</string>
     <string name="drum_title">DRUM</string>
     <string name="guitar_title">GUITAR</string>
+    <string name="title_activity_main2">Main2Activity</string>
+    <string name="title_activity_tab">TabActivity</string>
 </resources>
