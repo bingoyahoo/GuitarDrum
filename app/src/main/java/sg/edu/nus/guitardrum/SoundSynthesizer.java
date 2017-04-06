@@ -26,7 +26,7 @@ public class SoundSynthesizer {
     private int chord =0; // 0 for C, 1 for Am, 2 for f, 3 for g
 
     private int     findNotes = midi % 12;
-
+    private boolean chordPlay = false;
     private String     noteInString;
     private TextView   notes;
     private AudioTrack audioTrack;
@@ -35,28 +35,30 @@ public class SoundSynthesizer {
     private static Map<String, Integer> midi_map = new HashMap<String, Integer>();
     static {
         midi_map.put("C", 60);
-        midi_map.put("C#", 61);
+     //   midi_map.put("C#", 61);
         midi_map.put("D", 62);
-        midi_map.put("D#", 63);
+     //   midi_map.put("D#", 63);
         midi_map.put("E", 64);
         midi_map.put("F", 65);
-        midi_map.put("F#", 66);
+     //   midi_map.put("F#", 66);
         midi_map.put("G", 67);
-        midi_map.put("G#", 68);
+    //    midi_map.put("G#", 68);
         midi_map.put("A", 69);
-        midi_map.put("A#", 70);
+   //     midi_map.put("A#", 70);
         midi_map.put("B", 71);
+        midi_map.put("C+",72); // c+ is a higher octave of C
         midi_map.put("Cchord", 0);
-        midi_map.put("AmChord",1);
+        midi_map.put("Amchord",1);
         midi_map.put("Fchord",2);
         midi_map.put("Gchord",3);
 
     }
 
-    public SoundSynthesizer(String note_to_play) {
-        noteInString = note_to_play;
-        midi = midi_map.get(note_to_play);
+ //   public SoundSynthesizer(String note_to_play) {
+ //       noteInString = note_to_play;
+   //     midi = midi_map.get(note_to_play);
 
+    public SoundSynthesizer(){
         buffsize = AudioTrack.getMinBufferSize(samplingRate,
                 AudioFormat.CHANNEL_OUT_MONO, AudioFormat.ENCODING_PCM_16BIT);
         buffsize = (int)(buffsize*multiplier);
@@ -73,6 +75,12 @@ public class SoundSynthesizer {
         }
         audioTrack.write(samples, 0, buffsize);
         audioTrack.play();
+
+    }
+
+    public void setNote(String note_to_play,Boolean isChord){
+        midi = midi_map.get(note_to_play);
+        chordPlay = isChord;
 
     }
 // No longer needed since will be using left or right direction to play
@@ -188,7 +196,12 @@ public class SoundSynthesizer {
         shortNote = true;
         audioTrack.stop();
         audioTrack.flush();
-        short[] samples = playNote(midi,buffsize,amp,samplingRate,shortNote,octave,volume);
+        short[] samples;
+        if (chordPlay){
+            samples = playChord(midi,buffsize,amp,samplingRate,shortNote,volume);
+        }else{
+            samples = playNote(midi,buffsize,amp,samplingRate,shortNote,octave,volume);
+        }
         audioTrack.write(samples, 0, buffsize);
         audioTrack.play();
     }
@@ -197,119 +210,16 @@ public class SoundSynthesizer {
         shortNote = false;
         audioTrack.stop();
         audioTrack.flush();
-        short[] samples = playNote(midi,buffsize,amp,samplingRate,shortNote,octave,volume);
+        short[] samples;
+        if (chordPlay){
+            samples = playChord(midi,buffsize,amp,samplingRate,shortNote,volume);
+        }else{
+            samples = playNote(midi,buffsize,amp,samplingRate,shortNote,octave,volume);
+        }
         audioTrack.write(samples, 0, buffsize);
         audioTrack.play();
     }
 
-    public void makeNext(){
-        midi = midi + 1;
-        if (midi > 127) {
-            midi = 127;
-        }
-        findNotes = midi % 12;
-        switch (findNotes) {
-            case 0:
-                noteInString = "C";
-                break;
-            case 1:
-                noteInString = "C#";
-                break;
-            case 2:
-                noteInString = "D";
-                break;
-            case 3:
-                noteInString = "D#";
-                break;
-            case 4:
-                noteInString = "E";
-                break;
-            case 5:
-                noteInString = "F";
-                break;
-            case 6:
-                noteInString = "F#";
-                break;
-            case 7:
-                noteInString = "G";
-                break;
-            case 8:
-                noteInString = "G#";
-                break;
-            case 9:
-                noteInString = "A";
-                break;
-            case 10:
-                noteInString = "A#";
-                break;
-            case 11:
-                noteInString = "B";
-                break;
-
-        }
-        notes.setText(noteInString);
-        audioTrack.stop();
-        audioTrack.flush();
-        short[] samples = playNote(midi,buffsize,amp,samplingRate,shortNote,octave,volume);
-        audioTrack.write(samples, 0, buffsize);
-        audioTrack.play();
-    }
-
-    public void makePrevious(){
-        midi = midi - 1;
-        if (midi < 0) {
-            midi = 0;
-        }
-        findNotes = midi % 12;
-        switch (findNotes) {
-            case 0:
-                noteInString = "C";
-                break;
-            case 1:
-                noteInString = "C#";
-                break;
-            case 2:
-                noteInString = "D";
-                break;
-            case 3:
-                noteInString = "D#";
-                break;
-            case 4:
-                noteInString = "E";
-                break;
-            case 5:
-                noteInString = "F";
-                break;
-            case 6:
-                noteInString = "F#";
-                break;
-            case 7:
-                noteInString = "G";
-                break;
-            case 8:
-                noteInString = "G#";
-                break;
-            case 9:
-                noteInString = "A";
-                break;
-            case 10:
-                noteInString = "A#";
-                break;
-            case 11:
-                noteInString = "B";
-                break;
-
-        }
-
-        notes.setText(noteInString);
-
-        audioTrack.stop();
-        audioTrack.flush();
-        short[] samples = playNote(midi,buffsize,amp,samplingRate,shortNote,octave,volume);
-        audioTrack.write(samples, 0, buffsize);
-        audioTrack.play();
-
-    }
 
 
 
