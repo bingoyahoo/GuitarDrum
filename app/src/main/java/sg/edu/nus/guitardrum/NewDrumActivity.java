@@ -10,6 +10,7 @@ import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
+import android.media.MediaPlayer;
 import android.os.Handler;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.content.ContextCompat;
@@ -22,9 +23,15 @@ import android.widget.Toast;
 
 import com.skyfishjy.library.*;
 
+import java.io.IOException;
 import java.util.Arrays;
 
 public class NewDrumActivity extends AppCompatActivity implements SensorEventListener {
+
+    private MediaPlayer mPlayerHitHat, mPlayerKick, mPlayerSnare, mPlayerCrash; /* For Drum */
+    private static float SHAKE_THRESHOLD = 1000;
+    private int drum_type;
+
 
     //variables for checking sampling rate
     private final static long sampling_interval = 10000000; //ns
@@ -33,6 +40,9 @@ public class NewDrumActivity extends AppCompatActivity implements SensorEventLis
     private double last_y;
     private double last_z;
     private long lastTimeStamp;
+    private long lastUpdate;
+
+
     //Buffer variables
     private boolean bufferisReady = false;
     private double[][] buffer;
@@ -63,6 +73,8 @@ public class NewDrumActivity extends AppCompatActivity implements SensorEventLis
 
         featureExtractor = null;
 
+        drum_type = 0;
+
         FloatingActionButton fab1 = (FloatingActionButton)findViewById(R.id.drum_button_1);
         FloatingActionButton fab2 = (FloatingActionButton)findViewById(R.id.drum_button_2);
         FloatingActionButton fab3 = (FloatingActionButton)findViewById(R.id.drum_button_3);
@@ -74,38 +86,49 @@ public class NewDrumActivity extends AppCompatActivity implements SensorEventLis
             @Override
             public void onClick(View view) {
                 startAllAnimation(1);
+                drum_type = 0;
             }
         });
         fab2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 startAllAnimation(2);
+                drum_type = 1;
             }
         });
         fab3.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 startAllAnimation(3);
+                drum_type = 2;
             }
         });
         fab4.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 startAllAnimation(4);
+                drum_type = 3;
             }
         });
         fab5.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 startAllAnimation(5);
+                drum_type = 4;
             }
         });
         fab6.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 startAllAnimation(6);
+                drum_type = 5;
             }
         });
+
+        mPlayerHitHat = MediaPlayer.create(this, R.raw.drum_hihat);
+        mPlayerKick = MediaPlayer.create(this, R.raw.drum_kick);
+        mPlayerSnare = MediaPlayer.create(this, R.raw.drum_snare);
+        mPlayerCrash = MediaPlayer.create(this, R.raw.drum_crash);
     }
 
     public void startAllAnimation(int index) {
@@ -199,16 +222,104 @@ public class NewDrumActivity extends AppCompatActivity implements SensorEventLis
     }
 
     public void onSensorChanged(SensorEvent event) {
-        makeBuffer(event);
-        if (bufferisReady) {
-            doSomeCalculations(buffer);
-            bufferisReady = false;
-            //copy nextBuffer into buffer
-            for (int i = 0; i < bufferOverlap; i++) {
-                for (int j = 0; j < 3; j++) {
-                    buffer[j][i] = nextBuffer[j][i];
-                }
+        int sensor = event.sensor.getType();
+        float[] values = event.values;
+        if(sensor == Sensor.TYPE_ACCELEROMETER) {
+            long curTime = System.currentTimeMillis();
+            if(lastUpdate == 0){
+                lastUpdate = curTime;
+                last_x = event.values[0];
+                last_y = event.values[1];
+                last_z = event.values[2];
             }
+            // Only allows one update every 100ms
+            else if ((curTime - lastUpdate) > 100) {
+                long diffTime = (curTime - lastUpdate);
+                lastUpdate = curTime;
+                double x = values[0];
+                double y = values[1];
+                double z = values[2];
+
+
+                double speed = (x + y + z - last_x - last_y - last_z) / diffTime * 10000;
+
+                if (speed > SHAKE_THRESHOLD){
+                    Log.d("sensor", "shake detected w/ speed: " + speed);
+                    playDrumSound();
+                }
+
+                last_x = x;
+                last_y = y;
+                last_z = z;
+            }
+        }
+//        makeBuffer(event);
+//        if (bufferisReady) {
+//            doSomeCalculations(buffer);
+//            bufferisReady = false;
+//            //copy nextBuffer into buffer
+//            for (int i = 0; i < bufferOverlap; i++) {
+//                for (int j = 0; j < 3; j++) {
+//                    buffer[j][i] = nextBuffer[j][i];
+//                }
+//            }
+//        }
+    }
+
+    // Play this sound if shaking detected
+    private void playDrumSound(){
+        switch (drum_type){
+            case 1:
+                if(mPlayerSnare.isPlaying()) {
+                    mPlayerSnare.stop();
+                    try {
+                        mPlayerSnare.prepare();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+                else {
+                    mPlayerSnare.start();
+                }
+                break;
+            case 2:
+                if(mPlayerKick.isPlaying()) {
+                    mPlayerKick.stop();
+                    try {
+                        mPlayerKick.prepare();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+                else {
+                    mPlayerKick.start();
+                }
+                break;
+            case 3:
+                if(mPlayerCrash.isPlaying()) {
+                    mPlayerCrash.stop();
+                    try {
+                        mPlayerCrash.prepare();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+                else {
+                    mPlayerCrash.start();
+                }
+                break;
+            default:
+                if(mPlayerHitHat.isPlaying()) {
+                    mPlayerHitHat.stop();
+                    try {
+                        mPlayerHitHat.prepare();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+                else {
+                    mPlayerHitHat.start();
+                }
         }
     }
 
