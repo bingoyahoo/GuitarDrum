@@ -309,11 +309,16 @@ public class SoundSynthesizer {
             amp = amp /2;
         }
 
+        int midiValue1 = midi;
+        int midiValue2 = midi+12;
+        int midiValue3 = checkThirdNote(midi);
+        int midiValue4 = checkFourthNote(midi);
 
-        double freq = convertMidiToFreq(midi);
-        double freq2 = convertMidiToFreq(midi+12);
-        double freq3 = convertMidiToFreq(midi+12+7);
-        double freq4 = convertMidiToFreq(midi+24+4);
+
+        double freq = convertMidiToFreq(midiValue1);
+        double freq2 = convertMidiToFreq(midiValue2);
+        double freq3 = convertMidiToFreq(midiValue3);
+        double freq4 = convertMidiToFreq(midiValue4);
         short samples[] = new short[buffsize];
         double[] adsr = createADSRFunction(buffsize,shortNote);
 
@@ -357,25 +362,25 @@ public class SoundSynthesizer {
         int note4 = 72;
 
         if (chord == 0) {//c chord
-            note1 = 60;
-            note2 = 64;
-            note3 = 67;
-            note4 = 72;
+            note1 = 60;//c4
+            note2 = 64;//e4
+            note3 = 67;//g4
+            note4 = 72;//c5
         } else if (chord == 1) {//Am chord
-            note1 = 57;
-            note2 = 60;
-            note3 = 64;
-            note4 = 69;
+            note1 = 57;//a3
+            note2 = 60;//c4
+            note3 = 64;//e4
+            note4 = 69;//a4
         } else if (chord == 2) {//f chord
-            note1 = 53;
-            note2 = 57;
-            note3 = 60;
-            note4 = 65;
+            note1 = 53;//f3
+            note2 = 57;//a4
+            note3 = 60;//c4
+            note4 = 65;//f4
         } else { //g chord
-            note1 = 55;
-            note2 = 59;
-            note3 = 62;
-            note4 = 67;
+            note1 = 55;//g3
+            note2 = 59;//b3
+            note3 = 62;//d4
+            note4 = 67;//g4
         }
 
         if (volume == 2) {
@@ -383,25 +388,41 @@ public class SoundSynthesizer {
         } else if (volume == 0) {
             amp = amp / 2;
         }
-        double note1_freq = convertMidiToFreq(note1);
-        double note1_freq2 = convertMidiToFreq(note1 + 12);
-        double note1_freq3 = convertMidiToFreq(note1 + 12 + 7);
-        double note1_freq4 = convertMidiToFreq(note1 + 24 + 4);
+        int note1_midi1 = note1;
+        int note1_midi2 = note1+12;
+        int note1_midi3 = checkThirdNote(note1);
+        int note1_midi4 = checkFourthNote(note1);
+        double note1_freq = convertMidiToFreq(note1_midi1);
+        double note1_freq2 = convertMidiToFreq(note1_midi2);
+        double note1_freq3 = convertMidiToFreq(note1_midi3);
+        double note1_freq4 = convertMidiToFreq(note1_midi4);
 
-        double note2_freq = convertMidiToFreq(note2);
-        double note2_freq2 = convertMidiToFreq(note2 + 12);
-        double note2_freq3 = convertMidiToFreq(note2 + 12 + 7);
-        double note2_freq4 = convertMidiToFreq(note2 + 24 + 4);
+        int note2_midi1 = note2;
+        int note2_midi2 = note2+12;
+        int note2_midi3 = checkThirdNote(note2);
+        int note2_midi4 = checkFourthNote(note2);
+        double note2_freq = convertMidiToFreq(note2_midi1);
+        double note2_freq2 = convertMidiToFreq(note2_midi2);
+        double note2_freq3 = convertMidiToFreq(note2_midi3);
+        double note2_freq4 = convertMidiToFreq(note2_midi4);
 
-        double note3_freq = convertMidiToFreq(note3);
-        double note3_freq2 = convertMidiToFreq(note3 + 12);
-        double note3_freq3 = convertMidiToFreq(note3 + 12 + 7);
-        double note3_freq4 = convertMidiToFreq(note3 + 24 + 4);
+        int note3_midi1 = note3;
+        int note3_midi2 = note3+12;
+        int note3_midi3 = checkThirdNote(note3);
+        int note3_midi4 = checkFourthNote(note3);
+        double note3_freq = convertMidiToFreq(note3_midi1);
+        double note3_freq2 = convertMidiToFreq(note3_midi2);
+        double note3_freq3 = convertMidiToFreq(note3_midi3);
+        double note3_freq4 = convertMidiToFreq(note3_midi4);
 
-        double note4_freq = convertMidiToFreq(note4);
-        double note4_freq2 = convertMidiToFreq(note4 + 12);
-        double note4_freq3 = convertMidiToFreq(note4 + 12 + 7);
-        double note4_freq4 = convertMidiToFreq(note4 + 24 + 4);
+        int note4_midi1 = note4;
+        int note4_midi2 = note4+12;
+        int note4_midi3 = checkThirdNote(note4);
+        int note4_midi4 = checkFourthNote(note4);
+        double note4_freq = convertMidiToFreq(note4_midi1);
+        double note4_freq2 = convertMidiToFreq(note4_midi2);
+        double note4_freq3 = convertMidiToFreq(note4_midi3);
+        double note4_freq4 = convertMidiToFreq(note4_midi4);
 
 
         short samples[] = new short[buffsize];
@@ -473,6 +494,24 @@ public class SoundSynthesizer {
         }
 
         return samples;
+    }
+    public static int checkThirdNote(int midi){
+        if(midi%12 == 11){ // note b have different value of midi jump
+            midi = midi+12+6;
+        }
+        else{
+            midi = midi+12+7;
+        }
+        return midi;
+    }
+    public static int checkFourthNote(int midi){
+        if(midi%12 == 2 || midi%12 == 4|| midi%12 ==9 || midi%12 ==11){// notes d,e,a,b have different midi jump
+            midi = midi+24+3;
+        }
+        else{
+            midi = midi+24+4;
+        }
+        return midi;
     }
 
 }
