@@ -48,7 +48,8 @@
             android:clickable="true"
             app:fabSize="mini"
             android:id="@+id/training_button"
-            app:backgroundTint="@color/colorDrumButton6"
+            app:backgroundTint="@color/colorDrumButton3"
+            android:src="@mipmap/ic_fitness_center_white_24dp"
             fabSize="normal"
             app:rippleColor="@android:color/holo_red_dark"
             android:background="@android:drawable/ic_menu_manage"/>

@@ -11,8 +11,6 @@ import android.widget.ImageButton;
 import android.widget.LinearLayout;
 
 public class HomeActivity extends AppCompatActivity  {
-
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -25,10 +23,7 @@ public class HomeActivity extends AppCompatActivity  {
         final LinearLayout guitarView = (LinearLayout)findViewById(R.id.guitar_view);
         final LinearLayout drumView = (LinearLayout)findViewById(R.id.drum_view);
 
-        // I recorded the guitar sound myself, hope it sounds ok haha
         // Drum beat taken from https://www.freesoundeffects.com/free-sounds/drum-loops-10031/
-
-
 
         /*
             To be added:

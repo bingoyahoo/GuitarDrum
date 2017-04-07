@@ -8,7 +8,8 @@
                 tools:context="sg.edu.nus.guitardrum.GuitarActivity">
 
     <android.support.design.widget.FloatingActionButton
-        android:id="@+id/floatingActionButton4"
+        android:id="@+id/fabvolumedown"
+        android:src="@mipmap/ic_volume_down_white_24dp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
@@ -18,18 +19,20 @@
         app:fabSize="mini"/>
 
     <android.support.design.widget.FloatingActionButton
-        android:id="@+id/floatingActionButton3"
+        android:id="@+id/fabvolumeup"
+        android:src="@mipmap/ic_volume_up_white_24dp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignBottom="@+id/floatingActionButton4"
-        android:layout_alignLeft="@+id/floatingActionButton4"
-        android:layout_alignStart="@+id/floatingActionButton4"
+        android:layout_alignBottom="@+id/fabvolumedown"
+        android:layout_alignLeft="@+id/fabvolumedown"
+        android:layout_alignStart="@+id/fabvolumedown"
         android:layout_marginBottom="57dp"
         android:clickable="true"
         app:fabSize="mini"/>
 
     <android.support.design.widget.FloatingActionButton
-        android:id="@+id/floatingActionButton5"
+        android:id="@+id/faboctaveup"
+        android:src="@mipmap/ic_call_made_white_24dp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
@@ -39,12 +42,13 @@
         app:fabSize="mini"/>
 
     <android.support.design.widget.FloatingActionButton
-        android:id="@+id/floatingActionButton6"
+        android:id="@+id/faboctavedown"
+        android:src="@mipmap/ic_call_received_white_24dp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/floatingActionButton5"
-        android:layout_alignStart="@+id/floatingActionButton5"
-        android:layout_below="@+id/floatingActionButton5"
+        android:layout_alignLeft="@+id/faboctaveup"
+        android:layout_alignStart="@+id/faboctaveup"
+        android:layout_below="@+id/faboctaveup"
         android:layout_marginTop="20dp"
         android:clickable="true"
         app:backgroundTint="@android:color/holo_green_light"
@@ -406,7 +410,7 @@
             android:layout_marginBottom="19dp"
             android:layout_marginEnd="17dp"
             android:layout_marginRight="17dp"
-            android:text="TextView"/>
+            android:text=""/>
 
         <Button
             android:id="@+id/btn_reset_oct"
@@ -448,12 +452,14 @@
             android:id="@+id/text_oct"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="28dp"
-            android:layout_marginStart="28dp"
-            android:text="Middle"
+            android:layout_marginLeft="22dp"
+            android:layout_marginStart="22dp"
+            android:text="Medium"
             android:layout_centerVertical="true"
             android:layout_alignLeft="@+id/btn_reset_oct"
-            android:layout_alignStart="@+id/btn_reset_oct"/>
+            android:layout_alignStart="@+id/btn_reset_oct"
+            android:textStyle="normal|bold"
+            android:textSize="18sp"/>
 
         <TextView
             android:id="@+id/text_vol"
@@ -463,7 +469,9 @@
             android:layout_alignBottom="@+id/btn_reset_vol"
             android:layout_alignLeft="@+id/text_oct"
             android:layout_alignStart="@+id/text_oct"
-            android:layout_marginBottom="55dp"/>
+            android:layout_marginBottom="55dp"
+            android:textSize="18sp"
+            android:textStyle="normal|bold"/>
     </com.skyfishjy.library.RippleBackground>
 
 

@@ -61,8 +61,6 @@ public class GuitarActivity extends AppCompatActivity implements SensorEventList
     private double[][] nextBuffer;
     private final static int bufferLen = 100;
     private final static int bufferOverlap = 25;
-    //    private final static int bufferLen = 64;
-//    private final static int bufferOverlap = 32;
     private int bufferIndex;
 
     private SensorManager     mSensorManager;
@@ -75,8 +73,7 @@ public class GuitarActivity extends AppCompatActivity implements SensorEventList
     final ArrayList<String> labels = new ArrayList<String>(Arrays.asList("front", "back", "up", "down", "left", "right", "standing"));
 
     private Boolean isChord = false;
-    SoundSynthesizer synthesizer ; //synthesizer_E, synthesizer_A, synthesizer_D, synthesizer_G,
-           // synthesizer_B, synthesizer_E_thick;
+    SoundSynthesizer synthesizer ;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -139,6 +136,60 @@ public class GuitarActivity extends AppCompatActivity implements SensorEventList
         final FrameLayout chordframe3 = (FrameLayout) findViewById(R.id.chord_frame3);
         final FrameLayout chordframe4 = (FrameLayout) findViewById(R.id.chord_frame4);
 
+        final Button btn_reset_vol = (Button)findViewById(R.id.btn_reset_vol);
+        final Button btn_reset_oct = (Button)findViewById(R.id.btn_reset_oct);
+        final TextView text_vol = (TextView) findViewById(R.id.text_vol);
+        final TextView text_oct = (TextView) findViewById(R.id.text_oct);
+
+        final FloatingActionButton fabvolup = (FloatingActionButton)findViewById(R.id.fabvolumeup);
+        final FloatingActionButton fabvoldown = (FloatingActionButton)findViewById(R.id.fabvolumedown);
+        final FloatingActionButton faboctup = (FloatingActionButton)findViewById(R.id.faboctaveup);
+        final FloatingActionButton faboctdown = (FloatingActionButton)findViewById(R.id.faboctavedown);
+
+        fabvolup.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                synthesizer.makeLouder();
+                text_vol.setText(synthesizer.volumeText);
+            }
+        });
+        fabvoldown.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                synthesizer.makeSofter();
+                text_vol.setText(synthesizer.volumeText);
+            }
+        });
+        faboctup.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                synthesizer.makeHigher();
+                text_oct.setText(synthesizer.octaveText);
+            }
+        });
+        faboctdown.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                synthesizer.makeLower();
+                text_oct.setText(synthesizer.octaveText);
+            }
+        });
+
+        btn_reset_vol.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                synthesizer.setVolume(1);
+                text_vol.setText(synthesizer.volumeText);
+            }
+        });
+
+        btn_reset_oct.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                synthesizer.setOctave(1);
+                text_oct.setText(synthesizer.octaveText);
+            }
+        });
 
         fab1.setOnClickListener(new View.OnClickListener() {
             @Override

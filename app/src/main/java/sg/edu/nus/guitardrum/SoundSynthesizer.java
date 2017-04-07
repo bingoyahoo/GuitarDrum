@@ -104,11 +104,11 @@ public class SoundSynthesizer {
             volume = 0;
         }
         switch(volume){
-            case 0: volumeText = "low volume";
+            case 0: volumeText = "Low";
                 break;
-            case 1: volumeText = "medium volume";
+            case 1: volumeText = "Medium";
                 break;
-            case 2: volumeText = "high volume";
+            case 2: volumeText = "High";
                 break;
         }
         return volumeText;
@@ -120,11 +120,11 @@ public class SoundSynthesizer {
             volume = 2;
         }
         switch(volume){
-            case 0: volumeText = "low volume";
+            case 0: volumeText = "Low";
                 break;
-            case 1: volumeText = "medium volume";
+            case 1: volumeText = "Medium";
                 break;
-            case 2: volumeText = "high volume";
+            case 2: volumeText = "High";
                 break;
         }
         return volumeText;
@@ -136,11 +136,11 @@ public class SoundSynthesizer {
             octave =2;
         }
         switch(octave){
-            case 0: octaveText = "low octave";
+            case 0: octaveText = "Low";
                 break;
-            case 1: octaveText = "medium octave";
+            case 1: octaveText = "Medium";
                 break;
-            case 2: octaveText = "high octave";
+            case 2: octaveText = "High";
                 break;
         }
         return octaveText;
@@ -160,11 +160,11 @@ public class SoundSynthesizer {
             octave = 0;
         }
         switch(octave){
-            case 0: octaveText = "low octave";
+            case 0: octaveText = "Low";
                 break;
-            case 1: octaveText = "medium octave";
+            case 1: octaveText = "Medium";
                 break;
-            case 2: octaveText = "high octave";
+            case 2: octaveText = "High";
                 break;
         }
         return octaveText;
@@ -460,6 +460,31 @@ public class SoundSynthesizer {
 
         return samples;
     }
+
+    public void setVolume(int loudness){
+        this.volume = loudness;
+        switch(this.volume){
+            case 0: volumeText = "Low";
+                break;
+            case 1: volumeText = "Medium";
+                break;
+            case 2: volumeText = "High";
+                break;
+        }
+    }
+
+    public void setOctave(int newOctave){
+        this.octave = newOctave;
+        switch(octave){
+            case 0: octaveText = "Low";
+                break;
+            case 1: octaveText = "Medium";
+                break;
+            case 2: octaveText = "High";
+                break;
+        }
+    }
+
 
 
 }

@@ -25,7 +25,6 @@
         <activity android:name=".TrainingActivity"
                   android:screenOrientation="portrait">
         </activity>
-        <activity android:name=".ChordActivity"></activity>
     </application>
 
 </manifest>
