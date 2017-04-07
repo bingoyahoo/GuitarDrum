@@ -38,6 +38,8 @@ import java.util.Arrays;
 import java.util.List;
 
 import weka.classifiers.Classifier;
+import weka.classifiers.functions.SimpleLogistic;
+import weka.classifiers.trees.RandomForest;
 
 /*
             Make sure to Sync Project With Gradle Files (Tools -> Android -> Sync Project With Gradle Files) and rebuild the app
@@ -68,7 +70,7 @@ public class GuitarActivity extends AppCompatActivity implements SensorEventList
     private FeaturesExtractor featureExtractor_x;
     private FeaturesExtractor featureExtractor_y;
     private FeaturesExtractor featureExtractor_z;
-    private Classifier cModel;
+    private static Classifier cModel;
     TextView tv_label;
     final ArrayList<String> labels = new ArrayList<String>(Arrays.asList("front", "back", "up", "down", "left", "right", "standing"));
 

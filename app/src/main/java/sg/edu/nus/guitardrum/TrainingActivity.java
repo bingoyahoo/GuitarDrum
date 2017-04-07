@@ -24,6 +24,7 @@ import java.util.Arrays;
 
 import weka.classifiers.Classifier;
 import weka.classifiers.functions.SimpleLogistic;
+import weka.classifiers.trees.RandomForest;
 import weka.core.Instances;
 
 public class TrainingActivity extends AppCompatActivity {
@@ -49,9 +50,14 @@ public class TrainingActivity extends AppCompatActivity {
                 data_arff += "@ATTRIBUTE X_CT NUMERIC\n";
                 data_arff += "@ATTRIBUTE X_SC NUMERIC\n";
                 data_arff += "@ATTRIBUTE X_CHROMA NUMERIC\n";
-//                data_arff += "@ATTRIBUTE X_DERIVATIVE NUMERIC\n";
-//                data_arff += "@ATTRIBUTE X_SF NUMERIC\n";
                 data_arff += "@ATTRIBUTE X_SV NUMERIC\n";
+                data_arff += "@ATTRIBUTE X_AVG NUMERIC\n";
+                data_arff += "@ATTRIBUTE X_STD_DEV NUMERIC\n";
+                data_arff += "@ATTRIBUTE X_INDEX_LARGEST NUMERIC\n";
+                data_arff += "@ATTRIBUTE X_HIGHEST_VALUE NUMERIC\n";
+                data_arff += "@ATTRIBUTE X_INDEX_SMALLEST NUMERIC\n";
+                data_arff += "@ATTRIBUTE X_SMALLEST_VALUE NUMERIC\n";
+                data_arff += "@ATTRIBUTE X_RANGE NUMERIC\n";
 
                 data_arff += "@ATTRIBUTE Y_RMS NUMERIC\n";
                 data_arff += "@ATTRIBUTE Y_ZC NUMERIC\n";
@@ -59,9 +65,14 @@ public class TrainingActivity extends AppCompatActivity {
                 data_arff += "@ATTRIBUTE Y_CT NUMERIC\n";
                 data_arff += "@ATTRIBUTE Y_SC NUMERIC\n";
                 data_arff += "@ATTRIBUTE Y_CHROMA NUMERIC\n";
-//                data_arff += "@ATTRIBUTE Y_DERIVATIVE NUMERIC\n";
-//                data_arff += "@ATTRIBUTE Y_SF NUMERIC\n";
                 data_arff += "@ATTRIBUTE Y_SV NUMERIC\n";
+                data_arff += "@ATTRIBUTE Y_AVG NUMERIC\n";
+                data_arff += "@ATTRIBUTE Y_STD_DEV NUMERIC\n";
+                data_arff += "@ATTRIBUTE Y_INDEX_LARGEST NUMERIC\n";
+                data_arff += "@ATTRIBUTE Y_HIGHEST_VALUE NUMERIC\n";
+                data_arff += "@ATTRIBUTE Y_INDEX_SMALLEST NUMERIC\n";
+                data_arff += "@ATTRIBUTE Y_SMALLEST_VALUE NUMERIC\n";
+                data_arff += "@ATTRIBUTE Y_RANGE NUMERIC\n";
 
                 data_arff += "@ATTRIBUTE Z_RMS NUMERIC\n";
                 data_arff += "@ATTRIBUTE Z_ZC NUMERIC\n";
@@ -69,9 +80,15 @@ public class TrainingActivity extends AppCompatActivity {
                 data_arff += "@ATTRIBUTE Z_CT NUMERIC\n";
                 data_arff += "@ATTRIBUTE Z_SC NUMERIC\n";
                 data_arff += "@ATTRIBUTE Z_CHROMA NUMERIC\n";
-//                data_arff += "@ATTRIBUTE Z_DERIVATIVE NUMERIC\n";
-//                data_arff += "@ATTRIBUTE Z_SF NUMERIC\n";
                 data_arff += "@ATTRIBUTE Z_SV NUMERIC\n";
+                data_arff += "@ATTRIBUTE Z_AVG NUMERIC\n";
+                data_arff += "@ATTRIBUTE Z_STD_DEV NUMERIC\n";
+                data_arff += "@ATTRIBUTE Z_INDEX_LARGEST NUMERIC\n";
+                data_arff += "@ATTRIBUTE Z_HIGHEST_VALUE NUMERIC\n";
+                data_arff += "@ATTRIBUTE Z_INDEX_SMALLEST NUMERIC\n";
+                data_arff += "@ATTRIBUTE Z_SMALLEST_VALUE NUMERIC\n";
+                data_arff += "@ATTRIBUTE Z_RANGE NUMERIC\n";
+
                 data_arff += "@ATTRIBUTE class {back,down,front,left,right,up,standing}\n";
                 data_arff += "\n";
                 data_arff += "@DATA\n";
@@ -84,7 +101,7 @@ public class TrainingActivity extends AppCompatActivity {
                 ArrayList<Double> features;
                 try{
                     String mLine = reader.readLine();
-                    System.out.println("First line " + mLine);
+//                    System.out.println("First line " + mLine);
                     int counter = 0;
                     int xyz_counter = 0; // 0 to 2 corresponding to x, y or z
                     double sampling_rate = 0.0;
@@ -142,7 +159,6 @@ public class TrainingActivity extends AppCompatActivity {
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
-                System.out.println(data);
 
                 writeToFile(data, TrainingActivity.this, "training.txt");
                 writeToFile(data_arff, TrainingActivity.this, "training.arff");
@@ -158,8 +174,7 @@ public class TrainingActivity extends AppCompatActivity {
                     String[] options = new String[2];
                     options[0] = "-I"; // Fix number of logitboost
                     options[1] = "-1"; // Fix number of logitboost
-                    Classifier cModel = new SimpleLogistic();
-//            cModel.setOptions(options);
+                    Classifier cModel = new RandomForest();
                     cModel.buildClassifier(data1);   // build classifier
 
                     // serialize model
@@ -169,11 +184,6 @@ public class TrainingActivity extends AppCompatActivity {
                     oos.flush();
                     oos.close();
 
-//
-//            Evaluation eval = new Evaluation(data);
-//            eval.crossValidateModel(cModel, data, 10, new Debug.Random(1));
-//            System.out.println(eval.toSummaryString("\nResults\n======\n", false));
-//            Toast.makeText(this, "Success Trained!", Toast.LENGTH_SHORT).show();
 
                 } catch (FileNotFoundException e) {
                     e.printStackTrace();

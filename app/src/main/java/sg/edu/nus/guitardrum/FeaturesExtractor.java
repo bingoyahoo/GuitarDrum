@@ -15,6 +15,7 @@ import jAudioFeatureExtractor.AudioFeatures.SpectralCentroid;
 import jAudioFeatureExtractor.AudioFeatures.SpectralFlux;
 import jAudioFeatureExtractor.AudioFeatures.SpectralVariability;
 import jAudioFeatureExtractor.AudioFeatures.ZeroCrossings;
+import jAudioFeatureExtractor.GeneralTools.Statistics;
 import jAudioFeatureExtractor.jAudioTools.AudioSamples;
 
 /**
@@ -71,31 +72,31 @@ public class FeaturesExtractor {
 		ArrayList<Double> features_values = new ArrayList<Double>();
 		RMS rms = new RMS();
 		double[] result = rms.extractFeature(samples, sampling_rate, null);
-		System.out.println(result[0]);
+//		System.out.println(result[0]);
 		features_values.add(result[0]);
 		
 		ZeroCrossings zc = new ZeroCrossings();
 		result = zc.extractFeature(samples, sampling_rate, null);
-		System.out.println(result[0]);
+//		System.out.println(result[0]);
 		features_values.add(result[0]);
 
 		LPC lpc = new LPC();
 		result = lpc.extractFeature(samples, sampling_rate, null);
-		System.out.println(result[0]);
+//		System.out.println(result[0]);
 		features_values.add(result[0]);
 
 		Compactness ct = new Compactness();
 		other_features = new double[1][];
 		other_features[0] = mag_spectrum;
 		result = ct.extractFeature(samples, sampling_rate, other_features);
-		System.out.println(result[0]);
+//		System.out.println(result[0]);
 		features_values.add(result[0]);
 
 		SpectralCentroid sc = new SpectralCentroid();
 		other_features = new double[1][];
 		other_features[0] = power_spectrum;
 		result = sc.extractFeature(samples, sampling_rate, other_features);
-		System.out.println(result[0]);
+//		System.out.println(result[0]);
 		features_values.add(result[0]);
 
 
@@ -103,15 +104,36 @@ public class FeaturesExtractor {
 		other_features = new double[1][];
 		other_features[0] = mag_spectrum;
 		result = chroma.extractFeature(samples, sampling_rate, other_features);
-		System.out.println("Chroma" + result[0]);
+//		System.out.println("Chroma" + result[0]);
 		features_values.add(result[0]);
 
 		SpectralVariability spectralVariability = new SpectralVariability();
 		other_features = new double[1][];
 		other_features[0] = mag_spectrum;
 		result = spectralVariability.extractFeature(samples, sampling_rate, other_features);
-		System.out.println("SV" + result[0]);
+//		System.out.println("SV" + result[0]);
 		features_values.add(result[0]);
+
+		double average = Statistics.getAverage(samples);
+		features_values.add(average);
+
+		double standard_dev = Statistics.getStandardDeviation(samples);
+		features_values.add(standard_dev);
+
+		int indexLargest = Statistics.getIndexOfLargest(samples);
+		features_values.add((double)(indexLargest % 5));
+
+		double highestPeak = samples[indexLargest];
+		features_values.add(highestPeak);
+
+		int indexSmallest = Statistics.getIndexOfSmallest(samples);
+		features_values.add((double)(indexSmallest%5));
+
+		double smallestValue = samples[indexSmallest];
+		features_values.add(smallestValue);
+
+		double range = highestPeak - smallestValue;
+		features_values.add(range);
 
 //		Derivative derivative = new Derivative();
 //		other_features = new double[1][];
