@@ -3,6 +3,7 @@ package sg.edu.nus.guitardrum;
 import android.animation.ArgbEvaluator;
 import android.animation.ValueAnimator;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
@@ -32,6 +33,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
+import android.widget.Button;
 
 import weka.classifiers.Evaluation;
 import weka.classifiers.trees.J48;
@@ -143,6 +145,8 @@ public class GuitarActivity extends AppCompatActivity implements SensorEventList
         FloatingActionButton fab4 = (FloatingActionButton)findViewById(R.id.string_button_4);
         FloatingActionButton fab5 = (FloatingActionButton)findViewById(R.id.string_button_5);
         FloatingActionButton fab6 = (FloatingActionButton)findViewById(R.id.string_button_6);
+        FloatingActionButton fab7 = (FloatingActionButton)findViewById(R.id.string_button_7);
+        FloatingActionButton fab8 = (FloatingActionButton)findViewById(R.id.string_button_8);
 
         fab1.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -228,6 +232,27 @@ public class GuitarActivity extends AppCompatActivity implements SensorEventList
                 }*/
             }
         });
+        fab7.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startAllAnimation(7);
+            }
+        });
+        fab8.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startAllAnimation(8);
+            }
+        });
+
+        final Button goToChordBtn = (Button)findViewById(R.id.go_to_chord);
+        goToChordBtn.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View view){
+                startActivity(new Intent(GuitarActivity.this, ChordActivity.class));
+            }
+        });
+
     }
 
     public void startAllAnimation(int index) {
@@ -262,6 +287,12 @@ public class GuitarActivity extends AppCompatActivity implements SensorEventList
                 break;
             case 6:
                 colorEnd =  ContextCompat.getColor(getApplicationContext(), R.color.colorGuitarButton6);
+                break;
+            case 7:
+                colorEnd =  ContextCompat.getColor(getApplicationContext(), R.color.colorGuitarButton7);
+                break;
+            case 8:
+                colorEnd =  ContextCompat.getColor(getApplicationContext(), R.color.colorGuitarButton8);
                 break;
         }
 
@@ -299,6 +330,12 @@ public class GuitarActivity extends AppCompatActivity implements SensorEventList
                 break;
             case 6:
                 rippleBackground=(RippleBackground)findViewById(R.id.ripple_bg_6);
+                break;
+            case 7:
+                rippleBackground=(RippleBackground)findViewById(R.id.ripple_bg_7);
+                break;
+            case 8:
+                rippleBackground=(RippleBackground)findViewById(R.id.ripple_bg_8);
                 break;
             default:
                 rippleBackground=(RippleBackground)findViewById(R.id.ripple_bg_1);

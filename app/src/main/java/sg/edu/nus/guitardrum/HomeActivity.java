@@ -28,8 +28,7 @@ public class HomeActivity extends AppCompatActivity  {
 
         // I recorded the guitar sound myself, hope it sounds ok haha
         // Drum beat taken from https://www.freesoundeffects.com/free-sounds/drum-loops-10031/
-        final MediaPlayer guitarPlayer = MediaPlayer.create(this, R.raw.guitar_intro);
-        final MediaPlayer drumPlayer = MediaPlayer.create(this, R.raw.drum_intro);
+
 
 
         /*
@@ -62,7 +61,7 @@ public class HomeActivity extends AppCompatActivity  {
                             guitarView.setPadding(oldPadding, oldPadding, oldPadding, oldPadding);
                         } else {
                             guitarView.setPadding(oldPadding, oldPadding, oldPadding, oldPadding);
-                            guitarPlayer.start();
+
                             // go to guitar page
                             startActivity(new Intent(HomeActivity.this, GuitarActivity.class));
                         }
@@ -94,7 +93,6 @@ public class HomeActivity extends AppCompatActivity  {
                             drumView.setPadding(oldPadding, oldPadding, oldPadding, oldPadding);
                         } else {
                             drumView.setPadding(oldPadding, oldPadding, oldPadding, oldPadding);
-                            drumPlayer.start();
                             startActivity(new Intent(HomeActivity.this, NewDrumActivity.class));
                         }
                         break;
