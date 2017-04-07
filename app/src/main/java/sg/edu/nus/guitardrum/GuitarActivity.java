@@ -107,7 +107,7 @@ public class GuitarActivity extends AppCompatActivity implements SensorEventList
             ois.close();
         } catch (IOException e) {
             e.printStackTrace();
-            Toast.makeText(this, "Downloads/classifier.model not found. Run TrainingActivity First.", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "Downloads/classifier.model not found. Run TrainingActivity from bottom left button of home screen first.", Toast.LENGTH_SHORT).show();
         } catch (ClassNotFoundException e){
 
         }

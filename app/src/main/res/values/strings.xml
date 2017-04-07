@@ -14,7 +14,7 @@
     <string name="drum_title">DRUM</string>
     <string name="guitar_title">GUITAR</string>
     <string name="train_classifier">Train Classifier</string>
-    <string name="instructions_training">This activity is for developers to retrain the SVM model if necessary. Upload a text file containing fs, labels and raw data from accelerometer. An text file for libsvm will be made.</string>
+    <string name="instructions_training">This activity is for developers to retrain the Weka model if necessary. Put a text file named results.txt containing fs, labels and raw data from accelerometer in project res/raw folder in Android Studio. A model file for Weka will be made in the Downloads folder of your phone.</string>
     <string name="choose_file">Start Training</string>
     <string name="title_activity_main2">Main2Activity</string>
     <string name="title_activity_tab">TabActivity</string>
