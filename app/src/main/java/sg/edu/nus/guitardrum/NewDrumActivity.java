@@ -11,20 +11,28 @@ import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.media.MediaPlayer;
+import android.os.Bundle;
 import android.os.Handler;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
 
-import com.skyfishjy.library.*;
+import com.skyfishjy.library.RippleBackground;
 
 import java.io.IOException;
 import java.util.Arrays;
+import java.util.PriorityQueue;
+import java.util.Queue;
+
+import jAudioFeatureExtractor.GeneralTools.Statistics;
+
+import static android.R.attr.value;
+import static android.R.attr.x;
+import static android.R.attr.y;
 
 public class NewDrumActivity extends AppCompatActivity implements SensorEventListener {
 
@@ -41,6 +49,7 @@ public class NewDrumActivity extends AppCompatActivity implements SensorEventLis
     private double last_z;
     private long lastTimeStamp;
     private long lastUpdate;
+    private final static int MAX_VOLUME = 100;
 
 
     //Buffer variables
@@ -57,10 +66,23 @@ public class NewDrumActivity extends AppCompatActivity implements SensorEventLis
     private Sensor mAccelerometer;
     private FeaturesExtractor featureExtractor;
 
+    Queue    queueBufferX;
+    Queue    queueBufferY;
+    Queue    queueBufferZ;
+    double[] latestBufferX;
+    double[] latestBufferY;
+    double[] latestBufferZ;
+    public static int BUFFER_LEN = 5;
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_new_drum);
+
+        queueBufferX = new PriorityQueue<Double>(BUFFER_LEN);
+        queueBufferY = new PriorityQueue<Double>(BUFFER_LEN);
+        queueBufferZ = new PriorityQueue<Double>(BUFFER_LEN);
 
         // For playing drum sounds when acceleration detected
         mSensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
@@ -70,6 +92,9 @@ public class NewDrumActivity extends AppCompatActivity implements SensorEventLis
         buffer = new double[3][bufferLen];
         nextBuffer = new double[3][bufferLen];
         bufferIndex = 0;
+        latestBufferX = new double[BUFFER_LEN];
+        latestBufferY = new double[BUFFER_LEN];
+        latestBufferZ = new double[BUFFER_LEN];
 
         featureExtractor = null;
 
@@ -113,6 +138,12 @@ public class NewDrumActivity extends AppCompatActivity implements SensorEventLis
         mPlayerKick = MediaPlayer.create(this, R.raw.drum_kick);
         mPlayerSnare = MediaPlayer.create(this, R.raw.drum_snare);
         mPlayerCrash = MediaPlayer.create(this, R.raw.drum_crash);
+    }
+
+
+    public void setVolume(MediaPlayer mediaPlayer, int soundVolume) {
+        final float volume = (float) (1 - (Math.log(MAX_VOLUME - soundVolume) / Math.log(MAX_VOLUME)));
+        mediaPlayer.setVolume(volume, volume);
     }
 
     public void startAllAnimation(int index) {
@@ -212,12 +243,41 @@ public class NewDrumActivity extends AppCompatActivity implements SensorEventLis
                 double x = values[0];
                 double y = values[1];
                 double z = values[2];
+                if (queueBufferX.size() >= BUFFER_LEN) {
+                    queueBufferX.poll();
+                    queueBufferY.poll();
+                    queueBufferZ.poll();
+                }
+                    queueBufferX.add(x);
+                    queueBufferY.add(y);
+                    queueBufferZ.add(z);
 
 
                 double speed = (x + y + z - last_x - last_y - last_z) / diffTime * 10000;
 
                 if (speed > SHAKE_THRESHOLD){
-                    Log.d("sensor", "shake detected w/ speed: " + speed);
+                    Object[] arrayX = queueBufferX.toArray();
+                    Object[] arrayY = queueBufferY.toArray();
+                    Object[] arrayZ = queueBufferZ.toArray();
+                    for (int j=0; j< arrayX.length; j++){
+                        latestBufferX[j] = (Double)arrayX[j];
+                        latestBufferY[j] = (Double)arrayY[j];
+                        latestBufferZ[j] = (Double)arrayZ[j];
+                    }
+
+                    double avgValueX = Statistics.getAverage(latestBufferX);
+                    double avgValueY = Statistics.getAverage(latestBufferY);
+                    double avgValueZ = Statistics.getAverage(latestBufferZ);
+                    double rangeX = calculateRange(latestBufferX);
+                    double rangeY = calculateRange(latestBufferY);
+                    double rangeZ = calculateRange(latestBufferZ);
+                    Log.d("sensor", "shake detected w/ speed: " + speed + " " + avgValueX);
+                    Log.d("sensor", "speed X: " + avgValueX);
+                    Log.d("sensor", "speed Y: " + avgValueY);
+                    Log.d("sensor", "speed Z: " + avgValueZ);
+                    Log.d("sensor", "range X: " + rangeX);
+                    Log.d("sensor", "range Y: " + rangeY);
+                    Log.d("sensor", "range Z: " + rangeZ);
                     playDrumSound();
                 }
 
@@ -226,6 +286,8 @@ public class NewDrumActivity extends AppCompatActivity implements SensorEventLis
                 last_z = z;
             }
         }
+
+
 //        makeBuffer(event);
 //        if (bufferisReady) {
 //            doSomeCalculations(buffer);
@@ -237,6 +299,19 @@ public class NewDrumActivity extends AppCompatActivity implements SensorEventLis
 //                }
 //            }
 //        }
+    }
+
+    public double calculateRange(double[] samples){
+        int indexLargest = Statistics.getIndexOfLargest(samples);
+
+        double highestPeak = samples[indexLargest];
+
+        int indexSmallest = Statistics.getIndexOfSmallest(samples);
+
+        double smallestValue = samples[indexSmallest];
+
+        double range = highestPeak - smallestValue;
+        return range;
     }
 
     // Play this sound if shaking detected

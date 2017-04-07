@@ -3,7 +3,6 @@ package sg.edu.nus.guitardrum;
 import android.animation.ArgbEvaluator;
 import android.animation.ValueAnimator;
 import android.content.Context;
-import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
@@ -14,10 +13,12 @@ import android.hardware.SensorManager;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
+import android.os.Vibrator;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.FrameLayout;
@@ -27,10 +28,7 @@ import android.widget.Toast;
 
 import com.skyfishjy.library.RippleBackground;
 
-import java.io.BufferedReader;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.util.ArrayList;
@@ -38,8 +36,6 @@ import java.util.Arrays;
 import java.util.List;
 
 import weka.classifiers.Classifier;
-import weka.classifiers.functions.SimpleLogistic;
-import weka.classifiers.trees.RandomForest;
 
 /*
             Make sure to Sync Project With Gradle Files (Tools -> Android -> Sync Project With Gradle Files) and rebuild the app
@@ -54,6 +50,8 @@ public class GuitarActivity extends AppCompatActivity implements SensorEventList
     private double last_x;
     private double last_y;
     private double last_z;
+    long startTime;
+    double samplingRate = 0.0;
     private String soundVolume = "medium volume";
     private String octaveValue = "medium octave";
     private long lastTimeStamp;
@@ -61,7 +59,7 @@ public class GuitarActivity extends AppCompatActivity implements SensorEventList
     private boolean bufferisReady = false;
     private double[][] buffer;
     private double[][] nextBuffer;
-    private final static int bufferLen = 100;
+    private final static int bufferLen = 70;
     private final static int bufferOverlap = 0;
     private int bufferIndex;
 
@@ -71,7 +69,12 @@ public class GuitarActivity extends AppCompatActivity implements SensorEventList
     private FeaturesExtractor featureExtractor_y;
     private FeaturesExtractor featureExtractor_z;
     private static Classifier cModel;
-    TextView tv_label;
+    Boolean startRecording = false;
+    private Boolean stillHoldingDown = false;
+    FloatingActionButton fabrecord;
+    private Vibrator vibrator;
+
+    TextView tv_label, text_oct, text_vol;
     final ArrayList<String> labels = new ArrayList<String>(Arrays.asList("front", "up", "right", "standing"));
 
     private Boolean isChord = false;
@@ -111,6 +114,8 @@ public class GuitarActivity extends AppCompatActivity implements SensorEventList
 
         }
 
+        vibrator = (Vibrator) this.getSystemService(Context.VIBRATOR_SERVICE);
+
 
         final FloatingActionButton fab1 = (FloatingActionButton)findViewById(R.id.string_button_1);
         final FloatingActionButton fab2 = (FloatingActionButton)findViewById(R.id.string_button_2);
@@ -140,13 +145,41 @@ public class GuitarActivity extends AppCompatActivity implements SensorEventList
 
         final Button btn_reset_vol = (Button)findViewById(R.id.btn_reset_vol);
         final Button btn_reset_oct = (Button)findViewById(R.id.btn_reset_oct);
-        final TextView text_vol = (TextView) findViewById(R.id.text_vol);
-        final TextView text_oct = (TextView) findViewById(R.id.text_oct);
+        text_vol = (TextView) findViewById(R.id.text_vol);
+        text_oct = (TextView) findViewById(R.id.text_oct);
 
         final FloatingActionButton fabvolup = (FloatingActionButton)findViewById(R.id.fabvolumeup);
         final FloatingActionButton fabvoldown = (FloatingActionButton)findViewById(R.id.fabvolumedown);
         final FloatingActionButton faboctup = (FloatingActionButton)findViewById(R.id.faboctaveup);
         final FloatingActionButton faboctdown = (FloatingActionButton)findViewById(R.id.faboctavedown);
+        fabrecord = (FloatingActionButton)findViewById(R.id.fabstartrecording);
+
+        fabrecord.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                int action = event.getAction();
+                if (action == MotionEvent.ACTION_DOWN) {
+                    // Vibrate for 500 milliseconds
+                    vibrator.vibrate(500);
+                    stillHoldingDown = true;
+                    startRecording = true;
+//                    fabrecord.setEnabled(false);
+                    System.out.println("holding down");
+                } else if (action == MotionEvent.ACTION_UP){
+//                    fabrecord.setEnabled(true);
+                    stillHoldingDown = false;
+                    System.out.println("released");
+                }
+                return true; // consume the event
+            }
+        });
+//        fabrecord.setOnClickListener(new View.OnClickListener(){
+//                @Override
+//                public void onClick(View view) {
+//                    stillHoldingDown = false;
+//                    System.out.println("released");
+//                }
+//        });
 
         fabvolup.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -472,13 +505,16 @@ public class GuitarActivity extends AppCompatActivity implements SensorEventList
 
 
 
-        if(sensor == Sensor.TYPE_ACCELEROMETER) {
+        if(sensor == Sensor.TYPE_ACCELEROMETER && startRecording) {
             if(lastTimeStamp == 0){
                 lastTimeStamp = event.timestamp;
             }
             else {
                 long timeInterval = event.timestamp - lastTimeStamp;
                 if (timeInterval > 1) {
+                    if (bufferIndex == 0) {
+                        startTime = event.timestamp;
+                    }
                     buffer[0][bufferIndex] = values[0];
                     buffer[1][bufferIndex] = values[1];
                     buffer[2][bufferIndex] = values[2];
@@ -487,9 +523,14 @@ public class GuitarActivity extends AppCompatActivity implements SensorEventList
                     last_z = values[2];
                     lastTimeStamp = event.timestamp;
                     bufferIndex += 1;
+                    tv_label.setText(String.valueOf(bufferIndex));
                     //buffer is full
                     if (bufferIndex == bufferLen) {
+                        startRecording = false;
+                        fabrecord.setEnabled(true);
                         bufferisReady = true;
+                        samplingRate = bufferLen / ((event.timestamp - startTime) / 1000.0);
+
                         //copy values into new buffer
                         for (int i = 0; i < bufferOverlap; i++) {
                             for (int j = 0; j < 3; j++) {
@@ -508,9 +549,9 @@ public class GuitarActivity extends AppCompatActivity implements SensorEventList
         List<Double> combined_features = new ArrayList<Double>();
         try {
             Log.v("Buffer is ", Arrays.toString(buffer[0]));
-            featureExtractor_x = new FeaturesExtractor(buffer[0], 48);
-            featureExtractor_y = new FeaturesExtractor(buffer[1], 48);
-            featureExtractor_z = new FeaturesExtractor(buffer[2], 48);
+            featureExtractor_x = new FeaturesExtractor(buffer[0], samplingRate);
+            featureExtractor_y = new FeaturesExtractor(buffer[1], samplingRate);
+            featureExtractor_z = new FeaturesExtractor(buffer[2], samplingRate);
         } catch (Exception e) {
             Toast.makeText(this, "FeaturesExtractor cannot launch", Toast.LENGTH_SHORT).show();
         }
@@ -546,6 +587,7 @@ public class GuitarActivity extends AppCompatActivity implements SensorEventList
             double result = ac.classify(cModel, list);
             int x = (int) result;
             String action_label = labels.get(x);
+            action_label = Character.toUpperCase(action_label.charAt(0)) + action_label.substring(1);
             tv_label.setText(action_label);
 
             // Modulate the sound based on result
@@ -553,25 +595,39 @@ public class GuitarActivity extends AppCompatActivity implements SensorEventList
 
     }
     public void modulateSoundBasedOnAction(String action_label){
-//        if (action_label.equalsIgnoreCase("front")){
-//            synthesizer.longPlay();
-//        } else if (action_label.equalsIgnoreCase("back")){
-//            synthesizer.shortPlay();
-//        } else if (action_label.equalsIgnoreCase("left")) {
-//            octaveValue = synthesizer.makeHigher();
-//        } else if (action_label.equalsIgnoreCase("right")) {
-//            octaveValue = synthesizer.makeLower();
-//        } else if (action_label.equalsIgnoreCase("up")) {
-//            //increase volume
-//            soundVolume = synthesizer.makeLouder();
-//        } else if (action_label.equalsIgnoreCase("down")) {
-//            // decrease volume
-//            soundVolume = synthesizer.makeSofter();
-//        } else{
-//            // TODO: Do nothing
-//            synthesizer.shortPlay();
-//        }
-        synthesizer.shortPlay();
+        if (action_label.equalsIgnoreCase("right")){
+            if (!stillHoldingDown) {
+                synthesizer.longPlay();
+            } else {
+                synthesizer.shortPlay();
+                tv_label.setText("Hold + Right");
+            }
+        } else if (action_label.equalsIgnoreCase("front")) {
+            if (!stillHoldingDown) {
+                octaveValue = synthesizer.makeHigher();
+                text_oct.setText(octaveValue);
+            } else {
+                octaveValue = synthesizer.makeLower();
+                text_oct.setText(octaveValue);
+                tv_label.setText("Hold + Front");
+            }
+
+
+        } else if (action_label.equalsIgnoreCase("up")) {
+            if (!stillHoldingDown) {
+                //increase volume
+                soundVolume = synthesizer.makeLouder();
+                text_vol.setText(soundVolume);
+            } else {
+                soundVolume = synthesizer.makeSofter();
+                text_vol.setText(soundVolume);
+                tv_label.setText("Hold + Up");
+            }
+
+        } else{
+            // TODO: Do nothing
+        }
+//        synthesizer.shortPlay();
     }
 
 
