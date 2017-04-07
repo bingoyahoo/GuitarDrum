@@ -82,7 +82,7 @@ public class Main extends Activity implements SensorEventListener {
 
                 long curTime = System.currentTimeMillis();
 
-                if ((curTime - lastUpdate) > 5) {
+                if ((curTime - lastUpdate) > 1) {
                     //long diffTime = (curTime - lastUpdate);
                     lastUpdate = curTime;
 
