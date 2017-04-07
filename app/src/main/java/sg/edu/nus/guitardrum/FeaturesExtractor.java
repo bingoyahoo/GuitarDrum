@@ -3,16 +3,19 @@ package sg.edu.nus.guitardrum;
 import java.util.ArrayList;
 
 import jAudioFeatureExtractor.Aggregators.Mean;
+import jAudioFeatureExtractor.AudioFeatures.Chroma;
 import jAudioFeatureExtractor.AudioFeatures.Compactness;
+import jAudioFeatureExtractor.AudioFeatures.Derivative;
 import jAudioFeatureExtractor.AudioFeatures.LPC;
+import jAudioFeatureExtractor.AudioFeatures.MFCC;
 import jAudioFeatureExtractor.AudioFeatures.MagnitudeSpectrum;
 import jAudioFeatureExtractor.AudioFeatures.PowerSpectrum;
 import jAudioFeatureExtractor.AudioFeatures.RMS;
 import jAudioFeatureExtractor.AudioFeatures.SpectralCentroid;
+import jAudioFeatureExtractor.AudioFeatures.SpectralFlux;
+import jAudioFeatureExtractor.AudioFeatures.SpectralVariability;
 import jAudioFeatureExtractor.AudioFeatures.ZeroCrossings;
 import jAudioFeatureExtractor.jAudioTools.AudioSamples;
-
-import static hep.aida.bin.BinFunctions1D.rms;
 
 /**
  * 
@@ -30,6 +33,7 @@ public class FeaturesExtractor {
 	double[][] windowed_samples;
 	double[][] other_features;
 	double[] mag_spectrum;
+	double[] mag_spectrum2;
 	double[] power_spectrum;
 	int window_size = 1024;
 	
@@ -52,6 +56,7 @@ public class FeaturesExtractor {
 
 		MagnitudeSpectrum ms = new MagnitudeSpectrum();
 		mag_spectrum = ms.extractFeature(samples, sampling_rate, null);
+		mag_spectrum2 = ms.extractFeature(samples, sampling_rate, null);
 
 		PowerSpectrum ps = new PowerSpectrum();
 		power_spectrum = ps.extractFeature(samples, sampling_rate, null);
@@ -92,12 +97,45 @@ public class FeaturesExtractor {
 		result = sc.extractFeature(samples, sampling_rate, other_features);
 		System.out.println(result[0]);
 		features_values.add(result[0]);
+
+
+		Chroma chroma = new Chroma();
+		other_features = new double[1][];
+		other_features[0] = mag_spectrum;
+		result = chroma.extractFeature(samples, sampling_rate, other_features);
+		System.out.println("Chroma" + result[0]);
+		features_values.add(result[0]);
+
+		SpectralVariability spectralVariability = new SpectralVariability();
+		other_features = new double[1][];
+		other_features[0] = mag_spectrum;
+		result = spectralVariability.extractFeature(samples, sampling_rate, other_features);
+		System.out.println("SV" + result[0]);
+		features_values.add(result[0]);
+
+//		Derivative derivative = new Derivative();
+//		other_features = new double[1][];
+//		other_features[0] = mag_spectrum;
+//		other_features[1] = mag_spectrum2;
+//		result = derivative.extractFeature(samples, sampling_rate, other_features);
+//		System.out.println("Derivative" + result[0]);
+//		features_values.add(result[0]);
 //
+//		SpectralFlux spectralFlux = new SpectralFlux();
+//		other_features = new double[1][];
+//		other_features[0] = mag_spectrum;
+//		other_features[1] = mag_spectrum2;
+//		result = spectralFlux.extractFeature(samples, sampling_rate, other_features);
+//		features_values.add(result[0]);
+
+
+
 //		MFCC mfcc = new MFCC();
 //		other_features = new double[1][];
 //		other_features[0] = mag_spectrum;
 //		result = mfcc.extractFeature(samples, sampling_rate, other_features);
-////		System.out.println(result[0]);
+//		features_values.add(result[0]);
+//		System.out.println(result[0]);
 
 		return features_values;
 	}

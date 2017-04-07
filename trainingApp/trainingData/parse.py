@@ -8,7 +8,7 @@ import glob
 import matplotlib.pyplot as plt
 import os
 
-TO_PLOT = False
+TO_PLOT = True
 
 def write_array_to_file(file, array):
 	"""Write the items of an array to the file"""
@@ -29,8 +29,8 @@ except ValueError:
 file_results = open("results.txt", "w")
 for text_file in text_files:
 	head, tail = os.path.split(text_file)
-	label = tail.split("-")[0] # Label for action
-	label = label[: -1] # remove last number
+	label0 = tail.split("-")[0] # Label for action
+	label = label0[: -1] # remove last number
 	print label
 
 	# label = label[: -1]
@@ -72,12 +72,14 @@ for text_file in text_files:
 	# print "y: ", list_y_readings
 	# print "z: ", list_z_readings
 	if TO_PLOT:
+		plt.clf()
 		plt.title(label)
 		plt.plot(list_x_readings, "r")
 		plt.plot(list_y_readings, "g")
 		plt.plot(list_z_readings, "b")
 		plt.ylabel('Accelerometer values')
-		plt.show()
+		# plt.show()
+		plt.savefig(label0 + ".png")
 
 
 	# Append all label and 3 arrays into text file to pass each of this 3 arrays into Buffering and Feature Extraction on Android

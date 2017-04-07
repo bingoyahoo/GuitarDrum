@@ -10,9 +10,6 @@ import weka.core.DenseInstance;
 import weka.core.Instance;
 import weka.core.Instances;
 
-import static android.R.attr.data;
-import static android.R.attr.value;
-
 /**
  * Created by delvinlow on 29/3/17.
  */
@@ -34,18 +31,24 @@ public class ActionClassifier {
             Attribute X_LPC = new Attribute("X_LPC");
             Attribute X_CT = new Attribute("X_CT");
             Attribute X_SC = new Attribute("X_SC");
+            Attribute X_CHROMA = new Attribute("X_CHROMA");
+            Attribute X_SV = new Attribute("X_SV");
 
             Attribute Y_RMS = new Attribute("Y_RMS");
             Attribute Y_ZC = new Attribute("Y_ZC");
             Attribute Y_LPC = new Attribute("Y_LPC");
             Attribute Y_CT = new Attribute("Y_CT");
             Attribute Y_SC = new Attribute("Y_SC");
+            Attribute Y_CHROMA = new Attribute("Y_CHROMA");
+            Attribute Y_SV = new Attribute("Y_SV");
 
             Attribute Z_RMS = new Attribute("Z_RMS");
             Attribute Z_ZC = new Attribute("Z_ZC");
             Attribute Z_LPC = new Attribute("Z_LPC");
             Attribute Z_CT = new Attribute("Z_CT");
             Attribute Z_SC = new Attribute("Z_SC");
+            Attribute Z_CHROMA = new Attribute("Z_CHROMA");
+            Attribute Z_SV = new Attribute("Z_SV");
 
             ArrayList<String> classVal = new ArrayList<String>();
             final ArrayList<String> labels = new ArrayList<String>(
@@ -64,29 +67,34 @@ public class ActionClassifier {
             attributeList.add(X_LPC);
             attributeList.add(X_CT);
             attributeList.add(X_SC);
+            attributeList.add(X_CHROMA);
+            attributeList.add(X_SV);
 
             attributeList.add(Y_RMS);
             attributeList.add(Y_ZC);
             attributeList.add(Y_LPC);
             attributeList.add(Y_CT);
             attributeList.add(Y_SC);
+            attributeList.add(Y_CHROMA);
+            attributeList.add(Y_SV);
 
             attributeList.add(Z_RMS);
             attributeList.add(Z_ZC);
             attributeList.add(Z_LPC);
             attributeList.add(Z_CT);
             attributeList.add(Z_SC);
-            attributeList.add(new Attribute("@@class@@",classVal));
+            attributeList.add(Z_CHROMA);
+            attributeList.add(Z_SV);
+            attributeList.add(new Attribute("class",classVal));
 
-            Instances data = new Instances("physical_activity", attributeList, 1);
-            data.setClassIndex(15);
 
-//            Instance data = new Instance();
+            //Create empty testing set and set class index
+            Instances data = new Instances("physical_activity", attributeList, 10);
+            data.setClassIndex(21);
 
             // Create instances for each pollutant with attribute values latitude,
             // longitude and pollutant itself
-            inst_co = new DenseInstance(data.numAttributes());
-            data.add(inst_co);
+            Instance inst_co = new DenseInstance(data.numAttributes());
 
             // Set instance's values for the attributes "latitude", "longitude", and
             // "pollutant concentration"
@@ -95,25 +103,30 @@ public class ActionClassifier {
             inst_co.setValue(X_LPC, features_values.get(2));
             inst_co.setValue(X_CT, features_values.get(3));
             inst_co.setValue(X_SC, features_values.get(4));
+            inst_co.setValue(X_CHROMA, features_values.get(5));
+            inst_co.setValue(X_SV, features_values.get(6));
 
-            inst_co.setValue(Y_RMS, features_values.get(5));
-            inst_co.setValue(Y_ZC, features_values.get(6));
-            inst_co.setValue(Y_LPC, features_values.get(7));
-            inst_co.setValue(Y_CT, features_values.get(8));
-            inst_co.setValue(Y_SC, features_values.get(9));
+            inst_co.setValue(Y_RMS, features_values.get(7));
+            inst_co.setValue(Y_ZC, features_values.get(8));
+            inst_co.setValue(Y_LPC, features_values.get(9));
+            inst_co.setValue(Y_CT, features_values.get(10));
+            inst_co.setValue(Y_SC, features_values.get(11));
+            inst_co.setValue(Y_CHROMA, features_values.get(12));
+            inst_co.setValue(Y_SV, features_values.get(13));
 
-            inst_co.setValue(Z_RMS, features_values.get(10));
-            inst_co.setValue(Z_ZC, features_values.get(11));
-            inst_co.setValue(Z_LPC, features_values.get(12));
-            inst_co.setValue(Z_CT, features_values.get(13));
-            inst_co.setValue(Z_SC, features_values.get(14));
+            inst_co.setValue(Z_RMS, features_values.get(14));
+            inst_co.setValue(Z_ZC, features_values.get(15));
+            inst_co.setValue(Z_LPC, features_values.get(16));
+            inst_co.setValue(Z_CT, features_values.get(17));
+            inst_co.setValue(Z_SC, features_values.get(18));
+            inst_co.setValue(Z_CHROMA, features_values.get(19));
+            inst_co.setValue(Z_SV, features_values.get(20));
 
-//            for (Double element : features_values) {
-//                System.out.println("Element: " + String.valueOf(element));
-//            }
+            data.add(inst_co);
+            // Specify the instance belong to training_Set to inherit headers
             inst_co.setDataset(data);
 
-            // inst_co.setMissing(cluster);
+
 //
 //            // load classifier from file
 //            Classifier cls_co = (Classifier) weka.core.SerializationHelper

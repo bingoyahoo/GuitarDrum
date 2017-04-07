@@ -1,9 +1,10 @@
 <resources>
-    <string name="app_name">Lottery</string>
+    <string name="app_name">Training App</string>
     <string name="axises_prompt">Choose movement: </string>
     <string-array name="axises">
 
         <item>--Select--</item>
+        <item>Standing</item>
         <item>Left</item>
         <item>Right</item>
         <item>Up</item>

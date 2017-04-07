@@ -11,16 +11,20 @@ import android.widget.Toast;
 
 import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.ObjectOutputStream;
 import java.io.OutputStreamWriter;
 import java.util.ArrayList;
 import java.util.Arrays;
 
-import static android.text.TextUtils.concat;
-import static jAudioFeatureExtractor.ACE.XMLParsers.ParseBatchJobHandler.ATTRIBUTE;
+import weka.classifiers.Classifier;
+import weka.classifiers.functions.SimpleLogistic;
+import weka.core.Instances;
 
 public class TrainingActivity extends AppCompatActivity {
 
@@ -44,18 +48,30 @@ public class TrainingActivity extends AppCompatActivity {
                 data_arff += "@ATTRIBUTE X_LPC NUMERIC\n";
                 data_arff += "@ATTRIBUTE X_CT NUMERIC\n";
                 data_arff += "@ATTRIBUTE X_SC NUMERIC\n";
+                data_arff += "@ATTRIBUTE X_CHROMA NUMERIC\n";
+//                data_arff += "@ATTRIBUTE X_DERIVATIVE NUMERIC\n";
+//                data_arff += "@ATTRIBUTE X_SF NUMERIC\n";
+                data_arff += "@ATTRIBUTE X_SV NUMERIC\n";
 
                 data_arff += "@ATTRIBUTE Y_RMS NUMERIC\n";
                 data_arff += "@ATTRIBUTE Y_ZC NUMERIC\n";
                 data_arff += "@ATTRIBUTE Y_LPC NUMERIC\n";
                 data_arff += "@ATTRIBUTE Y_CT NUMERIC\n";
                 data_arff += "@ATTRIBUTE Y_SC NUMERIC\n";
+                data_arff += "@ATTRIBUTE Y_CHROMA NUMERIC\n";
+//                data_arff += "@ATTRIBUTE Y_DERIVATIVE NUMERIC\n";
+//                data_arff += "@ATTRIBUTE Y_SF NUMERIC\n";
+                data_arff += "@ATTRIBUTE Y_SV NUMERIC\n";
 
                 data_arff += "@ATTRIBUTE Z_RMS NUMERIC\n";
                 data_arff += "@ATTRIBUTE Z_ZC NUMERIC\n";
                 data_arff += "@ATTRIBUTE Z_LPC NUMERIC\n";
                 data_arff += "@ATTRIBUTE Z_CT NUMERIC\n";
                 data_arff += "@ATTRIBUTE Z_SC NUMERIC\n";
+                data_arff += "@ATTRIBUTE Z_CHROMA NUMERIC\n";
+//                data_arff += "@ATTRIBUTE Z_DERIVATIVE NUMERIC\n";
+//                data_arff += "@ATTRIBUTE Z_SF NUMERIC\n";
+                data_arff += "@ATTRIBUTE Z_SV NUMERIC\n";
                 data_arff += "@ATTRIBUTE class {back,down,front,left,right,up,standing}\n";
                 data_arff += "\n";
                 data_arff += "@DATA\n";
@@ -130,6 +146,42 @@ public class TrainingActivity extends AppCompatActivity {
 
                 writeToFile(data, TrainingActivity.this, "training.txt");
                 writeToFile(data_arff, TrainingActivity.this, "training.arff");
+
+                BufferedReader reader1 = null;
+                try {
+                    String trainingFileLoc = Environment.getExternalStorageDirectory()+"/Download/training.arff";
+                    reader1 = new BufferedReader(new FileReader(trainingFileLoc));
+                    Instances data1 = new Instances(reader1);
+                    reader1.close();
+                    data1.setClassIndex(data1.numAttributes() - 1);
+
+                    String[] options = new String[2];
+                    options[0] = "-I"; // Fix number of logitboost
+                    options[1] = "-1"; // Fix number of logitboost
+                    Classifier cModel = new SimpleLogistic();
+//            cModel.setOptions(options);
+                    cModel.buildClassifier(data1);   // build classifier
+
+                    // serialize model
+                    ObjectOutputStream oos = new ObjectOutputStream(
+                            new FileOutputStream(Environment.getExternalStorageDirectory()+"/Download/classifier.model"));
+                    oos.writeObject(cModel);
+                    oos.flush();
+                    oos.close();
+
+//
+//            Evaluation eval = new Evaluation(data);
+//            eval.crossValidateModel(cModel, data, 10, new Debug.Random(1));
+//            System.out.println(eval.toSummaryString("\nResults\n======\n", false));
+//            Toast.makeText(this, "Success Trained!", Toast.LENGTH_SHORT).show();
+
+                } catch (FileNotFoundException e) {
+                    e.printStackTrace();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                } catch (Exception e){
+
+                }
             }
 
         });
