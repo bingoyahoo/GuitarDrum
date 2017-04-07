@@ -20,6 +20,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.FrameLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -69,12 +70,11 @@ public class GuitarActivity extends AppCompatActivity implements SensorEventList
     private FeaturesExtractor featureExtractor_x;
     private FeaturesExtractor featureExtractor_y;
     private FeaturesExtractor featureExtractor_z;
-//    private J48       tree;
     private Classifier cModel;
-//    Classifier cModel;
     TextView tv_label;
     final ArrayList<String> labels = new ArrayList<String>(Arrays.asList("front", "back", "up", "down", "left", "right", "standing"));
 
+    private Boolean isChord = false;
     SoundSynthesizer synthesizer ; //synthesizer_E, synthesizer_A, synthesizer_D, synthesizer_G,
            // synthesizer_B, synthesizer_E_thick;
     @Override
@@ -113,14 +113,32 @@ public class GuitarActivity extends AppCompatActivity implements SensorEventList
         }
 
 
-        FloatingActionButton fab1 = (FloatingActionButton)findViewById(R.id.string_button_1);
-        FloatingActionButton fab2 = (FloatingActionButton)findViewById(R.id.string_button_2);
-        FloatingActionButton fab3 = (FloatingActionButton)findViewById(R.id.string_button_3);
-        FloatingActionButton fab4 = (FloatingActionButton)findViewById(R.id.string_button_4);
-        FloatingActionButton fab5 = (FloatingActionButton)findViewById(R.id.string_button_5);
-        FloatingActionButton fab6 = (FloatingActionButton)findViewById(R.id.string_button_6);
-        FloatingActionButton fab7 = (FloatingActionButton)findViewById(R.id.string_button_7);
-        FloatingActionButton fab8 = (FloatingActionButton)findViewById(R.id.string_button_8);
+        final FloatingActionButton fab1 = (FloatingActionButton)findViewById(R.id.string_button_1);
+        final FloatingActionButton fab2 = (FloatingActionButton)findViewById(R.id.string_button_2);
+        final FloatingActionButton fab3 = (FloatingActionButton)findViewById(R.id.string_button_3);
+        final FloatingActionButton fab4 = (FloatingActionButton)findViewById(R.id.string_button_4);
+        final FloatingActionButton fab5 = (FloatingActionButton)findViewById(R.id.string_button_5);
+        final FloatingActionButton fab6 = (FloatingActionButton)findViewById(R.id.string_button_6);
+        final FloatingActionButton fab7 = (FloatingActionButton)findViewById(R.id.string_button_7);
+        final FloatingActionButton fab8 = (FloatingActionButton)findViewById(R.id.string_button_8);
+        final FrameLayout noteframe1 = (FrameLayout) findViewById(R.id.note_frame1);
+        final FrameLayout noteframe2 = (FrameLayout) findViewById(R.id.note_frame2);
+        final FrameLayout noteframe3 = (FrameLayout) findViewById(R.id.note_frame3);
+        final FrameLayout noteframe4 = (FrameLayout) findViewById(R.id.note_frame4);
+        final FrameLayout noteframe5 = (FrameLayout) findViewById(R.id.note_frame5);
+        final FrameLayout noteframe6 = (FrameLayout) findViewById(R.id.note_frame6);
+        final FrameLayout noteframe7 = (FrameLayout) findViewById(R.id.note_frame7);
+        final FrameLayout noteframe8 = (FrameLayout) findViewById(R.id.note_frame8);
+
+        final FloatingActionButton chordfab1 = (FloatingActionButton)findViewById(R.id.chord_button_1);
+        final FloatingActionButton chordfab2 = (FloatingActionButton)findViewById(R.id.chord_button_2);
+        final FloatingActionButton chordfab3 = (FloatingActionButton)findViewById(R.id.chord_button_3);
+        final FloatingActionButton chordfab4 = (FloatingActionButton)findViewById(R.id.chord_button_4);
+        final FrameLayout chordframe1 = (FrameLayout) findViewById(R.id.chord_frame1);
+        final FrameLayout chordframe2 = (FrameLayout) findViewById(R.id.chord_frame2);
+        final FrameLayout chordframe3 = (FrameLayout) findViewById(R.id.chord_frame3);
+        final FrameLayout chordframe4 = (FrameLayout) findViewById(R.id.chord_frame4);
+
 
         fab1.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -179,11 +197,101 @@ public class GuitarActivity extends AppCompatActivity implements SensorEventList
             }
         });
 
+
+
+        // Chords
+        chordfab1.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startAllAnimation(1);
+                synthesizer.setNote("Cchord", true);
+            }
+        });
+        chordfab2.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startAllAnimation(2);
+                synthesizer.setNote("Amchord",true);
+            }
+        });
+        chordfab3.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startAllAnimation(3);
+                synthesizer.setNote("Fchord",true);
+            }
+        });
+        chordfab4.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startAllAnimation(4);
+                synthesizer.setNote("Gchord",true);
+            }
+        });
+
+
         final Button goToChordBtn = (Button)findViewById(R.id.go_to_chord);
         goToChordBtn.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View view){
-                startActivity(new Intent(GuitarActivity.this, ChordActivity.class));
+                isChord = !isChord;
+                if (isChord) {
+                    goToChordBtn.setText("Chords");
+                    fab1.setVisibility(View.GONE);
+                    fab2.setVisibility(View.GONE);
+                    fab3.setVisibility(View.GONE);
+                    fab4.setVisibility(View.GONE);
+                    fab5.setVisibility(View.GONE);
+                    fab6.setVisibility(View.GONE);
+                    fab7.setVisibility(View.GONE);
+                    fab8.setVisibility(View.GONE);
+                    noteframe1.setVisibility(View.GONE);
+                    noteframe2.setVisibility(View.GONE);
+                    noteframe3.setVisibility(View.GONE);
+                    noteframe4.setVisibility(View.GONE);
+                    noteframe5.setVisibility(View.GONE);
+                    noteframe6.setVisibility(View.GONE);
+                    noteframe7.setVisibility(View.GONE);
+                    noteframe8.setVisibility(View.GONE);
+
+                    chordfab1.setVisibility(View.VISIBLE);
+                    chordfab2.setVisibility(View.VISIBLE);
+                    chordfab3.setVisibility(View.VISIBLE);
+                    chordfab4.setVisibility(View.VISIBLE);
+                    chordframe1.setVisibility(View.VISIBLE);
+                    chordframe2.setVisibility(View.VISIBLE);
+                    chordframe3.setVisibility(View.VISIBLE);
+                    chordframe4.setVisibility(View.VISIBLE);
+                } else {
+                    goToChordBtn.setText("Notes");
+                    fab1.setVisibility(View.VISIBLE);
+                    fab2.setVisibility(View.VISIBLE);
+                    fab3.setVisibility(View.VISIBLE);
+                    fab4.setVisibility(View.VISIBLE);
+                    fab5.setVisibility(View.VISIBLE);
+                    fab6.setVisibility(View.VISIBLE);
+                    fab7.setVisibility(View.VISIBLE);
+                    fab8.setVisibility(View.VISIBLE);
+                    noteframe1.setVisibility(View.VISIBLE);
+                    noteframe2.setVisibility(View.VISIBLE);
+                    noteframe3.setVisibility(View.VISIBLE);
+                    noteframe4.setVisibility(View.VISIBLE);
+                    noteframe5.setVisibility(View.VISIBLE);
+                    noteframe6.setVisibility(View.VISIBLE);
+                    noteframe7.setVisibility(View.VISIBLE);
+                    noteframe8.setVisibility(View.VISIBLE);
+
+                    chordfab1.setVisibility(View.GONE);
+                    chordfab2.setVisibility(View.GONE);
+                    chordfab3.setVisibility(View.GONE);
+                    chordfab4.setVisibility(View.GONE);
+                    chordframe1.setVisibility(View.GONE);
+                    chordframe2.setVisibility(View.GONE);
+                    chordframe3.setVisibility(View.GONE);
+                    chordframe4.setVisibility(View.GONE);
+
+                }
+
             }
         });
 
