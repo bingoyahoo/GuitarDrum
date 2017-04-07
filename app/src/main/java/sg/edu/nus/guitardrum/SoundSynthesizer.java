@@ -32,6 +32,7 @@ public class SoundSynthesizer {
     private AudioTrack audioTrack;
     public String volumeText;
     public String octaveText;
+
     private static Map<String, Integer> midi_map = new HashMap<String, Integer>();
     static {
         midi_map.put("C", 60);
@@ -63,7 +64,7 @@ public class SoundSynthesizer {
                 AudioFormat.CHANNEL_OUT_MONO, AudioFormat.ENCODING_PCM_16BIT);
         buffsize = (int)(buffsize*multiplier);
         // create an audiotrack object
-        final AudioTrack audioTrack = new AudioTrack(AudioManager.STREAM_MUSIC,
+        audioTrack = new AudioTrack(AudioManager.STREAM_MUSIC,
                 samplingRate, AudioFormat.CHANNEL_OUT_MONO,
                 AudioFormat.ENCODING_PCM_16BIT, buffsize,
                 AudioTrack.MODE_STREAM);
@@ -111,13 +112,6 @@ public class SoundSynthesizer {
                 break;
         }
         return volumeText;
-        /*
-        audioTrack.stop();
-        audioTrack.flush();
-        short[] samples = playNote(midi,buffsize,amp,samplingRate,shortNote,octave,volume);
-        audioTrack.write(samples, 0, buffsize);
-        audioTrack.play();
-        */
     }
 
     public String makeLouder(){
@@ -134,14 +128,6 @@ public class SoundSynthesizer {
                 break;
         }
         return volumeText;
-        /*
-        shortNote = true;
-        audioTrack.stop();
-        audioTrack.flush();
-        short[] samples = playNote(midi,buffsize,amp,samplingRate,shortNote,octave,volume);
-        audioTrack.write(samples, 0, buffsize);
-        audioTrack.play();
-        */
     }
 
     public String makeHigher(){
