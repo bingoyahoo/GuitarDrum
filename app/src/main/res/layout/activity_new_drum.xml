@@ -62,35 +62,14 @@
         app:rb_scale="8">
     </com.skyfishjy.library.RippleBackground>
 
-    <com.skyfishjy.library.RippleBackground
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
-        android:id="@+id/drum_ripple_bg_6"
-        app:rb_color="@color/colorDrumButton6"
-        app:rb_radius="50dp"
-        app:rb_rippleAmount="1"
-        app:rb_duration="1500"
-        app:rb_scale="8"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true">
-
-    </com.skyfishjy.library.RippleBackground>
-
     <FrameLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|right"
-        android:layout_marginTop="140dp"
+        android:layout_marginTop="260dp"
         android:layout_marginLeft="70dp"
         android:id="@+id/frameLayout4">
-        <android.support.design.widget.FloatingActionButton
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:clickable="true"
-            app:fabSize="mini"
-            android:id="@+id/drum_button_3"
-            app:backgroundTint="@color/colorDrumButton3"/>
+
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -99,44 +78,25 @@
             android:elevation="16dp"
             android:textColor="@android:color/white"
             android:textAppearance="?android:attr/textAppearanceMedium" />
-    </FrameLayout>
-
-    <FrameLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="bottom|right"
-        android:layout_marginTop="240dp"
-        android:layout_marginLeft="70dp"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:id="@+id/frameLayout2">
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:text="5"
-            android:elevation="16dp"
-            android:textColor="@android:color/white"
-            android:textAppearance="?android:attr/textAppearanceMedium" />
 
         <android.support.design.widget.FloatingActionButton
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:clickable="true"
             app:fabSize="mini"
-            android:id="@+id/drum_button_5"
-            app:backgroundTint="@color/colorDrumButton5"/>
+            android:id="@+id/drum_button_3"
+            app:backgroundTint="@color/colorDrumButton3"/>
     </FrameLayout>
+
 
     <FrameLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|right"
-        android:layout_marginTop="40dp"
+        android:layout_marginTop="130dp"
         android:layout_marginLeft="70dp"
         android:id="@+id/frameLayout3">
+
         <android.support.design.widget.FloatingActionButton
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -159,8 +119,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|right"
-        android:layout_marginTop="40dp"
-        android:layout_marginLeft="260dp"
+        android:layout_marginTop="130dp"
+        android:layout_marginLeft="220dp"
         android:id="@+id/frameLayout5">
         <android.support.design.widget.FloatingActionButton
             android:layout_width="wrap_content"
@@ -183,8 +143,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|right"
-        android:layout_marginTop="140dp"
-        android:layout_marginLeft="260dp"
+        android:layout_marginTop="260dp"
+        android:layout_marginLeft="220dp"
         android:id="@+id/frameLayout6">
         <android.support.design.widget.FloatingActionButton
             android:layout_width="wrap_content"
@@ -203,27 +163,75 @@
             android:textAppearance="?android:attr/textAppearanceMedium" />
     </FrameLayout>
 
-    <FrameLayout
+    <com.skyfishjy.library.RippleBackground
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:id="@+id/drum_ripple_bg_6"
+        app:rb_color="@color/colorDrumButton6"
+        app:rb_radius="50dp"
+        app:rb_rippleAmount="1"
+        app:rb_duration="1500"
+        app:rb_scale="8"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true">
+
+        <TextView
+        android:text="Hihat"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="bottom|right"
-        android:layout_marginTop="240dp"
-        android:layout_marginLeft="260dp">
-        <android.support.design.widget.FloatingActionButton
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:clickable="true"
-            app:fabSize="mini"
-            android:id="@+id/drum_button_6"
-            app:backgroundTint="@color/colorDrumButton6"/>
+        android:layout_alignParentTop="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_marginLeft="72dp"
+        android:layout_marginStart="72dp"
+        android:layout_marginTop="102dp"
+        android:id="@+id/textView_hihat"
+        android:textAlignment="center"
+        android:textStyle="normal|bold"/>
+
         <TextView
+            android:text="Snare"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:text="6"
-            android:elevation="16dp"
-            android:textColor="@android:color/white"
-            android:textAppearance="?android:attr/textAppearanceMedium" />
-    </FrameLayout>
+            android:layout_alignParentTop="true"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:layout_marginLeft="222dp"
+            android:layout_marginStart="222dp"
+            android:layout_marginTop="102dp"
+            android:id="@+id/textView_snare"
+            android:textAlignment="center"
+            android:textStyle="normal|bold"/>
+
+        <TextView
+            android:text="Kick"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:layout_marginLeft="75dp"
+            android:layout_marginStart="75dp"
+            android:layout_marginTop="310dp"
+            android:id="@+id/textView_kick"
+            android:textAlignment="center"
+            android:textStyle="normal|bold"/>
+
+        <TextView
+            android:text="Crash"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:layout_marginLeft="220dp"
+            android:layout_marginStart="220dp"
+            android:layout_marginTop="310dp"
+            android:id="@+id/textView_crash"
+            android:textAlignment="center"
+            android:textStyle="normal|bold"/>
+    </com.skyfishjy.library.RippleBackground>
+
 
 </RelativeLayout>

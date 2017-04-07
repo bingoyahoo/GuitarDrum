@@ -79,8 +79,6 @@ public class NewDrumActivity extends AppCompatActivity implements SensorEventLis
         FloatingActionButton fab2 = (FloatingActionButton)findViewById(R.id.drum_button_2);
         FloatingActionButton fab3 = (FloatingActionButton)findViewById(R.id.drum_button_3);
         FloatingActionButton fab4 = (FloatingActionButton)findViewById(R.id.drum_button_4);
-        FloatingActionButton fab5 = (FloatingActionButton)findViewById(R.id.drum_button_5);
-        FloatingActionButton fab6 = (FloatingActionButton)findViewById(R.id.drum_button_6);
 
         fab1.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -108,20 +106,6 @@ public class NewDrumActivity extends AppCompatActivity implements SensorEventLis
             public void onClick(View view) {
                 startAllAnimation(4);
                 drum_type = 3;
-            }
-        });
-        fab5.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                startAllAnimation(5);
-                drum_type = 4;
-            }
-        });
-        fab6.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                startAllAnimation(6);
-                drum_type = 5;
             }
         });
 
@@ -158,12 +142,7 @@ public class NewDrumActivity extends AppCompatActivity implements SensorEventLis
             case 4:
                 colorEnd =  ContextCompat.getColor(getApplicationContext(), R.color.colorDrumButton4);
                 break;
-            case 5:
-                colorEnd =  ContextCompat.getColor(getApplicationContext(), R.color.colorDrumButton5);
-                break;
-            case 6:
-                colorEnd =  ContextCompat.getColor(getApplicationContext(), R.color.colorDrumButton6);
-                break;
+
         }
 
         ValueAnimator colorAnim = ValueAnimator.ofObject(new ArgbEvaluator(), colorStart, colorEnd);
@@ -194,12 +173,6 @@ public class NewDrumActivity extends AppCompatActivity implements SensorEventLis
                 break;
             case 4:
                 rippleBackground=(RippleBackground)findViewById(R.id.drum_ripple_bg_4);
-                break;
-            case 5:
-                rippleBackground=(RippleBackground)findViewById(R.id.drum_ripple_bg_5);
-                break;
-            case 6:
-                rippleBackground=(RippleBackground)findViewById(R.id.drum_ripple_bg_6);
                 break;
             default:
                 rippleBackground=(RippleBackground)findViewById(R.id.drum_ripple_bg_1);
@@ -297,12 +270,12 @@ public class NewDrumActivity extends AppCompatActivity implements SensorEventLis
                 break;
             case 3:
                 if(mPlayerCrash.isPlaying()) {
-                    mPlayerCrash.stop();
-                    try {
-                        mPlayerCrash.prepare();
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
+//                    mPlayerCrash.stop();
+//                    try {
+////                        mPlayerCrash.prepare();
+//                    } catch (IOException e) {
+//                        e.printStackTrace();
+//                    }
                 }
                 else {
                     mPlayerCrash.start();
