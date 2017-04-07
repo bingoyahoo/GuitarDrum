@@ -12,7 +12,6 @@
         android:layout_height="wrap_content"
         android:clickable="true"
         app:fabSize="mini"
-        app:srcCompat="?android:attr/findOnPageNextDrawable"
         android:id="@+id/floatingActionButton4"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
@@ -23,7 +22,6 @@ android:layout_width="wrap_content"
 android:layout_height="wrap_content"
 android:clickable="true"
 app:fabSize="mini"
-app:srcCompat="?android:attr/findOnPagePreviousDrawable"
 android:id="@+id/floatingActionButton3"
 android:layout_alignBottom="@+id/floatingActionButton4"
 android:layout_alignLeft="@+id/floatingActionButton4"
@@ -35,7 +33,6 @@ android:layout_marginBottom="57dp" />
         android:layout_height="wrap_content"
         android:clickable="true"
         app:fabSize="mini"
-        app:srcCompat="?android:attr/findOnPagePreviousDrawable"
         android:layout_centerVertical="true"
         android:layout_centerHorizontal="true"
         android:id="@+id/floatingActionButton5"
@@ -46,7 +43,6 @@ android:layout_marginBottom="57dp" />
         android:layout_height="wrap_content"
         android:clickable="true"
         app:fabSize="mini"
-        app:srcCompat="?android:attr/findOnPageNextDrawable"
         android:id="@+id/floatingActionButton6"
         android:layout_below="@+id/floatingActionButton5"
         android:layout_alignLeft="@+id/floatingActionButton5"
@@ -236,11 +232,7 @@ android:layout_marginBottom="57dp" />
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-<<<<<<< HEAD
-            android:text="E"
-=======
             android:text="C"
->>>>>>> origin/UI
             android:elevation="16dp"
             android:textColor="@android:color/white"
             android:textAppearance="?android:attr/textAppearanceMedium" />
@@ -266,11 +258,7 @@ android:layout_marginBottom="57dp" />
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-<<<<<<< HEAD
-            android:text="A"
-=======
             android:text="D"
->>>>>>> origin/UI
             android:elevation="16dp"
             android:textColor="@android:color/white"
             android:textAppearance="?android:attr/textAppearanceMedium" />
@@ -296,11 +284,7 @@ android:layout_marginBottom="57dp" />
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-<<<<<<< HEAD
-            android:text="D"
-=======
             android:text="E"
->>>>>>> origin/UI
             android:elevation="16dp"
             android:textColor="@android:color/white"
             android:textAppearance="?android:attr/textAppearanceMedium" />
@@ -326,11 +310,7 @@ android:layout_marginBottom="57dp" />
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-<<<<<<< HEAD
-            android:text="G"
-=======
             android:text="F"
->>>>>>> origin/UI
             android:elevation="16dp"
             android:textColor="@android:color/white"
             android:textAppearance="?android:attr/textAppearanceMedium" />
@@ -357,11 +337,7 @@ android:layout_marginBottom="57dp" />
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-<<<<<<< HEAD
-            android:text="B"
-=======
             android:text="G"
->>>>>>> origin/UI
             android:elevation="16dp"
             android:textColor="@android:color/white"
             android:textAppearance="?android:attr/textAppearanceMedium" />
