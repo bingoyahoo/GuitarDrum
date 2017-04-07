@@ -58,6 +58,8 @@ public class GuitarActivity extends AppCompatActivity implements SensorEventList
     private double last_x;
     private double last_y;
     private double last_z;
+    private String soundVolume = "medium volume";
+    private String octaveValue = "medium octave";
     private long lastTimeStamp;
     //Buffer variables
     private boolean bufferisReady = false;
@@ -78,8 +80,8 @@ public class GuitarActivity extends AppCompatActivity implements SensorEventList
 
     final ArrayList<String> labels = new ArrayList<String>(Arrays.asList("front", "back", "up", "down", "left", "right", "standing"));
 
-    SoundSynthesizer synthesizer_E, synthesizer_A, synthesizer_D, synthesizer_G,
-            synthesizer_B, synthesizer_E_thick;
+    SoundSynthesizer synthesizer ; //synthesizer_E, synthesizer_A, synthesizer_D, synthesizer_G,
+           // synthesizer_B, synthesizer_E_thick;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -98,13 +100,15 @@ public class GuitarActivity extends AppCompatActivity implements SensorEventList
         featureExtractor_y = null;
         featureExtractor_z = null;
 
+        synthesizer = new SoundSynthesizer();
+/*
         synthesizer_E = new SoundSynthesizer("E");
         synthesizer_A = new SoundSynthesizer("A");
         synthesizer_D = new SoundSynthesizer("D");
         synthesizer_G = new SoundSynthesizer("G");
         synthesizer_B = new SoundSynthesizer("B");
         synthesizer_E_thick = new SoundSynthesizer("E");
-
+*/
         BufferedReader reader = null;
         try {
             String trainingFileLoc = Environment.getExternalStorageDirectory()+"/Download/training.arff";
@@ -144,66 +148,84 @@ public class GuitarActivity extends AppCompatActivity implements SensorEventList
             @Override
             public void onClick(View view) {
                 startAllAnimation(1);
+                synthesizer.setNote("E",false);
+                /*
                 if (synthesizer_E.isRunning){
                     synthesizer_E.stop();
                 } else {
                     synthesizer_E.play();
-                }
+                }*/
             }
         });
         fab2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 startAllAnimation(2);
+                synthesizer.setNote("A",false);
+
+                /*
                 if (synthesizer_A.isRunning){
                     synthesizer_A.stop();
                 } else {
                     synthesizer_A.play();
                 }
+                */
             }
         });
         fab3.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 startAllAnimation(3);
+                synthesizer.setNote("D",false);
+
+                /*
                 if (synthesizer_D.isRunning){
                     synthesizer_D.stop();
                 } else {
                     synthesizer_D.play();
-                }
+                }*/
             }
         });
         fab4.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 startAllAnimation(4);
+                synthesizer.setNote("G",false);
+
+                /*
                 if (synthesizer_G.isRunning){
                     synthesizer_G.stop();
                 } else {
                     synthesizer_G.play();
-                }
+                }*/
             }
         });
         fab5.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 startAllAnimation(5);
+                synthesizer.setNote("B",false);
+
+                /*
                 if (synthesizer_B.isRunning){
                     synthesizer_B.stop();
                 } else {
                     synthesizer_B.play();
-                }
+                }*/
             }
         });
         fab6.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 startAllAnimation(6);
+                synthesizer.setNote("E",false);
+
+                /*
                 if (synthesizer_E_thick.isRunning){
                     synthesizer_E_thick.stop();
                 } else {
                     synthesizer_E_thick.play();
-                }
+                }*/
             }
         });
     }
@@ -447,12 +469,15 @@ public class GuitarActivity extends AppCompatActivity implements SensorEventList
     protected void onPause() {
         super.onPause();
         mSensorManager.unregisterListener(this);
+        synthesizer.stop();
+        /*
         synthesizer_E.stop();
         synthesizer_A.stop();
         synthesizer_D.stop();
         synthesizer_G.stop();
         synthesizer_B.stop();
         synthesizer_E_thick.stop();
+        */
     }
 
     private void classify(List<Double> list){
@@ -481,19 +506,25 @@ public class GuitarActivity extends AppCompatActivity implements SensorEventList
     }
     public void modulateSoundBasedOnAction(String action_label){
         if (action_label.equalsIgnoreCase("front")){
-            synthesizer_E.makeFaster();
+            synthesizer.longPlay();
+         //   synthesizer_E.longPlay();
         } else if (action_label.equalsIgnoreCase("back")){
-            synthesizer_E.makeSlower();
+            synthesizer.shortPlay();
+          //  synthesizer_E.shortPlay();
         } else if (action_label.equalsIgnoreCase("left")) {
-            synthesizer_E.makePrevious();
+            octaveValue = synthesizer.makeHigher();
+         //   synthesizer_E.makePrevious();
         } else if (action_label.equalsIgnoreCase("right")) {
-            synthesizer_E.makeNext();
+            octaveValue = synthesizer.makeLower();
+         //   synthesizer_E.makeNext();
         } else if (action_label.equalsIgnoreCase("up")) {
+            soundVolume = synthesizer.makeLouder();
             //increase volume
-            synthesizer_E.makeLouder();
+         //   synthesizer_E.makeLouder();
         } else if (action_label.equalsIgnoreCase("down")) {
+            soundVolume = synthesizer.makeSofter();
             // decrease volume
-            synthesizer_E.makeSofter();
+         //   synthesizer_E.makeSofter();
         } else{
             // Do nothing
         }
