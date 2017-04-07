@@ -34,7 +34,7 @@ public class TrainingActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_training);
 
-        final ArrayList<String> labels = new ArrayList<String>(Arrays.asList("front", "back", "up", "down", "left", "right", "standing"));
+        final ArrayList<String> labels = new ArrayList<String>(Arrays.asList("front", "up", "right", "standing"));
 
         final Button trainingButton = (Button)findViewById(R.id.button_choose_text_file);
         trainingButton.setOnClickListener(new View.OnClickListener(){
@@ -89,7 +89,7 @@ public class TrainingActivity extends AppCompatActivity {
                 data_arff += "@ATTRIBUTE Z_SMALLEST_VALUE NUMERIC\n";
                 data_arff += "@ATTRIBUTE Z_RANGE NUMERIC\n";
 
-                data_arff += "@ATTRIBUTE class {back,down,front,left,right,up,standing}\n";
+                data_arff += "@ATTRIBUTE class {front,up,right,standing}\n";
                 data_arff += "\n";
                 data_arff += "@DATA\n";
                 InputStream inputStream = TrainingActivity.this.getResources().openRawResource(R.raw.results);

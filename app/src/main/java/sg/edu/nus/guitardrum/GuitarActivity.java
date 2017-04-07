@@ -62,7 +62,7 @@ public class GuitarActivity extends AppCompatActivity implements SensorEventList
     private double[][] buffer;
     private double[][] nextBuffer;
     private final static int bufferLen = 100;
-    private final static int bufferOverlap = 25;
+    private final static int bufferOverlap = 0;
     private int bufferIndex;
 
     private SensorManager     mSensorManager;
@@ -72,7 +72,7 @@ public class GuitarActivity extends AppCompatActivity implements SensorEventList
     private FeaturesExtractor featureExtractor_z;
     private static Classifier cModel;
     TextView tv_label;
-    final ArrayList<String> labels = new ArrayList<String>(Arrays.asList("front", "back", "up", "down", "left", "right", "standing"));
+    final ArrayList<String> labels = new ArrayList<String>(Arrays.asList("front", "up", "right", "standing"));
 
     private Boolean isChord = false;
     SoundSynthesizer synthesizer ;
@@ -478,7 +478,7 @@ public class GuitarActivity extends AppCompatActivity implements SensorEventList
             }
             else {
                 long timeInterval = event.timestamp - lastTimeStamp;
-                if (timeInterval > 5) {
+                if (timeInterval > 1) {
                     buffer[0][bufferIndex] = values[0];
                     buffer[1][bufferIndex] = values[1];
                     buffer[2][bufferIndex] = values[2];

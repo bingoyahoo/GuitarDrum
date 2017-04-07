@@ -75,12 +75,12 @@ public class ActionClassifier {
 
             ArrayList<String> classVal = new ArrayList<String>();
             final ArrayList<String> labels = new ArrayList<String>(
-                    Arrays.asList("front", "back", "up", "down", "left", "right", "standing"));
+                    Arrays.asList("front", "up", "right", "standing"));
             classVal.add("front");
-            classVal.add("back");
+//            classVal.add("back");
             classVal.add("up");
-            classVal.add("down");
-            classVal.add("left");
+//            classVal.add("down");
+//            classVal.add("left");
             classVal.add("right");
             classVal.add("standing");
 
