@@ -11,7 +11,6 @@ import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.os.Bundle;
-import android.os.Environment;
 import android.os.Handler;
 import android.os.Vibrator;
 import android.support.design.widget.FloatingActionButton;
@@ -28,8 +27,8 @@ import android.widget.Toast;
 
 import com.skyfishjy.library.RippleBackground;
 
-import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.ObjectInputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -103,8 +102,10 @@ public class GuitarActivity extends AppCompatActivity implements SensorEventList
 
         // deserialize model
         try{
-            ObjectInputStream ois = new ObjectInputStream(
-                    new FileInputStream(Environment.getExternalStorageDirectory()+"/Download/classifier.model"));
+//            ObjectInputStream ois = new ObjectInputStream(new FileInputStream(Environment.getExternalStorageDirectory()+"/Download/classifier.model"));
+            InputStream is = GuitarActivity.this.getResources().openRawResource(R.raw.classifier);
+//            InputStream is = GuitarActivity.this.getResources().openRawResource(R.raw.classifier);
+            ObjectInputStream ois = new ObjectInputStream(is);
             cModel = (Classifier) ois.readObject();
             ois.close();
         } catch (IOException e) {
@@ -597,9 +598,9 @@ public class GuitarActivity extends AppCompatActivity implements SensorEventList
     public void modulateSoundBasedOnAction(String action_label){
         if (action_label.equalsIgnoreCase("right")){
             if (!stillHoldingDown) {
-                synthesizer.longPlay();
-            } else {
                 synthesizer.shortPlay();
+            } else {
+                synthesizer.longPlay();
                 tv_label.setText("Hold + Right");
             }
         } else if (action_label.equalsIgnoreCase("front")) {

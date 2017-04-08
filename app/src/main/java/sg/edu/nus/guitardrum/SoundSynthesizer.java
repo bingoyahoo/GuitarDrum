@@ -234,10 +234,10 @@ public class SoundSynthesizer {
         int releaseDuration;
 
         if (shortNote){
-            attackDuration = (int)((buffsize/2)*0.35);
-            decayDuration = (int)((buffsize/2)*0.2);
-            sustainDuration = (int)((buffsize/2) *0.25);
-            releaseDuration = (int)((buffsize/2) *0.2);
+            attackDuration = (int)((buffsize/4)*0.35);
+            decayDuration = (int)((buffsize/4)*0.2);
+            sustainDuration = (int)((buffsize/4) *0.25);
+            releaseDuration = (int)((buffsize/4) *0.2);
         }
         else{
             attackDuration = (int)((buffsize)*0.35);
@@ -304,7 +304,7 @@ public class SoundSynthesizer {
 
         if (shortNote){
             for(int i=0; i < buffsize; i++) {
-                if (i<buffsize/4){
+                if (i<buffsize/8){
                     double wavePoint= Math.abs(0.45*amp*(2*(i%(samplingRate/freq))/(samplingRate/freq)-1)
                             +0.3*amp*(2*(i%(samplingRate/freq2))/(samplingRate/freq2)-1)
                             +0.2*amp*(2*(i%(samplingRate/freq3))/(samplingRate/freq3)-1)
@@ -319,14 +319,17 @@ public class SoundSynthesizer {
             }
         }
         else{
-            for(int i=0; i < buffsize; i++) {
-                double wavePoint= Math.abs(0.45*amp*(2*(i%(samplingRate/freq))/(samplingRate/freq)-1)
-                        +0.3*amp*(2*(i%(samplingRate/freq2))/(samplingRate/freq2)-1)
-                        +0.2*amp*(2*(i%(samplingRate/freq3))/(samplingRate/freq3)-1)
-                        +0.05*amp*(2*(i%(samplingRate/freq4))/(samplingRate/freq4)-1))-amp;
+            for(int i=0; i < buffsize/4; i++) {
+                if (i<buffsize /4) {
+                    double wavePoint = Math.abs(0.45 * amp * (2 * (i % (samplingRate / freq)) / (samplingRate / freq) - 1)
+                            + 0.3 * amp * (2 * (i % (samplingRate / freq2)) / (samplingRate / freq2) - 1)
+                            + 0.2 * amp * (2 * (i % (samplingRate / freq3)) / (samplingRate / freq3) - 1)
+                            + 0.05 * amp * (2 * (i % (samplingRate / freq4)) / (samplingRate / freq4) - 1)) - amp;
 
-
-                samples[i] = (short)(wavePoint*adsr[i]);
+                    samples[i] = (short) (wavePoint * adsr[i]);
+                } else {
+                    samples[i]=0;
+                }
 
             }
         }
@@ -395,7 +398,7 @@ public class SoundSynthesizer {
 
         if (shortNote) {
             for (int i = 0; i < buffsize; i++) {
-                if (i < buffsize / 4) {
+                if (i < buffsize / 12) {
                     double note1_wavePoint = Math.abs(0.45 * amp * (2 * (i % (samplingRate / note1_freq)) / (samplingRate / note1_freq) - 1)
                             + 0.3 * amp * (2 * (i % (samplingRate / note1_freq2)) / (samplingRate / note1_freq2) - 1)
                             + 0.2 * amp * (2 * (i % (samplingRate / note1_freq3)) / (samplingRate / note1_freq3) - 1)
