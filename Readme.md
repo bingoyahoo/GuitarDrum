@@ -84,7 +84,7 @@ We have also designed our app so that all of the buttons have distinct colors. F
 ---
 ## Section 3 Sounds
 
-Instruments Emulated & Discussion
+### Instruments Emulated & Discussion
 For the sound signals, both synthesized audio and pre-recorded audio are used for the app. The synthesized audio is used to emulate guitar while pre-recorded audio is used to emulate drums acquired from https://realdrumsamples.com/. 
 
 To synthesize the guitar sound, triangle waves are used as it is most similar to the actual sound waves of guitar. Furthermore, as each instrument have a unique tone due to the harmonics, the first three harmonics of the note is considered when creating the wave. 
