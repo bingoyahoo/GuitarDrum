@@ -1,10 +1,5 @@
-
-
-
-
-
-# CS4347 Sound and Music Computing Project - Group 6
-*Semester 2 2016/2017, “From Motion to Music” *
+# CS4347 Sound and Music Computing Project
+* Semester 2 2016/2017, Group 6, “From Motion to Music” *
 
 ---
 ## Section 1 Overview 
