@@ -4,7 +4,7 @@
 ---
 ## Section 1 Overview 
 
-Our system implements a two-in-one instrumental Android app comprising both a guitar and a drum. The notes and chords of the guitar will be displayed on the app as buttons and pressing of a button, combined with a motion gesture, will play that note or chord of the guitar. When the motion is completed, the note will be played. Different gestures will be used to modulate the sound of the guitar such as increasing its volume or pitch and keeping the finger on the button while doing the motion will produce a reverse effect.
+Our system implements a two-in-one instrumental Android app __comprising both a guitar and a drum__. The notes and chords of the guitar will be displayed on the app as buttons and pressing of a button, combined with a motion gesture, will play that note or chord of the guitar. When the motion is completed, the note will be played. Different gestures will be used to modulate the sound of the guitar such as increasing its volume or pitch and keeping the finger on the button while doing the motion will produce a reverse effect.
 
 ![Main Interface](screenshots/img_main_interface.png "Main interface of our app")
  
